@@ -35,4 +35,4 @@ transforms.Normalize([0.4914, 0.4822, 0.4465], [0.2023, 0.1994, 0.2010])]
 - Number of epochs: 600
 - Learning rate: 0.05, reduce by factor 0.1 every 200 epochs
 - Weight decay: 0.001
-
+- Nesterov SGD optimizer with momentum = 0.9
