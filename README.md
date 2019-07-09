@@ -9,7 +9,10 @@
 | vgg11_bn | 92.61%        |
 | vgg13_bn | 94.27%        |
 | vgg16_bn | 94.07%        |
+| vgg19_bn | 94.25%        |
 | resnet18 | 93.48%        |
+| resnet34 | 93.82%        |
+| resnet50 | 94.38%        |
 
 I will add more models...
 
