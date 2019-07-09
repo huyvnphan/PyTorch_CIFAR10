@@ -4,15 +4,17 @@
 - I also share the **weights** of these models, so you can just load the weight and use them.
 
 ## Accuracy of supported models
-| Model    | Test Accuracy |
-|----------|---------------|
-| vgg11_bn | 92.61%        |
-| vgg13_bn | 94.27%        |
-| vgg16_bn | 94.07%        |
-| vgg19_bn | 94.25%        |
-| resnet18 | 93.48%        |
-| resnet34 | 93.82%        |
-| resnet50 | 94.38%        |
+| Model        | Test Accuracy |
+|--------------|---------------|
+| vgg11_bn     | 92.61%        |
+| vgg13_bn     | 94.27%        |
+| vgg16_bn     | 94.07%        |
+| vgg19_bn     | 94.25%        |
+| resnet18     | 93.48%        |
+| resnet34     | 93.82%        |
+| resnet50     | 94.38%        |
+| mobilenet_v2 | 93.85%        |
+| densenet121  | 94.76%        |
 
 I will add more models...
 
