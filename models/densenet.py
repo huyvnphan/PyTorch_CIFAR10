@@ -118,7 +118,7 @@ def _densenet(arch, growth_rate, block_config, num_init_features, pretrained, pr
               **kwargs):
     model = DenseNet(growth_rate, block_config, num_init_features, **kwargs)
     if pretrained:
-        state_dict = torch.load('models/state_dicts/'+arch+'.pt')
+        state_dict = torch.load('models/state_dicts/'+arch+'.pt', map_location='cpu')
         model.load_state_dict(state_dict)
     return model
 

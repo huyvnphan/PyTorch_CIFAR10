@@ -198,7 +198,7 @@ class ResNet(nn.Module):
 def _resnet(arch, block, layers, pretrained, progress, **kwargs):
     model = ResNet(block, layers, **kwargs)
     if pretrained:
-        state_dict = torch.load('models/state_dicts/'+arch+'.pt')
+        state_dict = torch.load('models/state_dicts/'+arch+'.pt', map_location='cpu')
         model.load_state_dict(state_dict)
     return model
 

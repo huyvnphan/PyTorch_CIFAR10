@@ -74,7 +74,7 @@ def _vgg(arch, cfg, batch_norm, pretrained, progress, **kwargs):
         kwargs['init_weights'] = False
     model = VGG(make_layers(cfgs[cfg], batch_norm=batch_norm), **kwargs)
     if pretrained:
-        state_dict = torch.load('models/state_dicts/'+arch+'.pt')
+        state_dict = torch.load('models/state_dicts/'+arch+'.pt', map_location='cpu')
         model.load_state_dict(state_dict)
     return model
 
