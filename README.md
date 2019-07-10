@@ -3,19 +3,19 @@
 - I changed *number of class, filter size, stride, and padding* in the the original code so that it works with CIFAR-10.
 - I also share the **weights** of these models, so you can just load the weights and use them.
 
-## Accuracy of supported models
-| No. | Model        | Test Accuracy |
-|-----|--------------|---------------|
-| 1   | vgg11_bn     | 92.61%        |
-| 2   | vgg13_bn     | 94.27%        |
-| 3   | vgg16_bn     | 94.07%        |
-| 4   | vgg19_bn     | 94.25%        |
-| 5   | resnet18     | 93.48%        |
-| 6   | resnet34     | 93.82%        |
-| 7   | resnet50     | 94.38%        |
-| 8   | mobilenet_v2 | 93.85%        |
-| 9   | densenet121  | 94.76%        |
-| 10  | googlenet    | 95.08%        |
+## Statistic of supported models
+| No. | Model        | Test Accuracy | Parameters | State Dict Size |
+|-----|--------------|---------------|------------|-----------------|
+| 1   | vgg11_bn     | 92.61%        | 128.813M   | 491 MB          |
+| 2   | vgg13_bn     | 94.27%        | 128.998M   | 492 MB          |
+| 3   | vgg16_bn     | 94.07%        | 134.310M   | 512 MB          |
+| 4   | vgg19_bn     | 94.25%        | 139.622M   | 533 MB          |
+| 5   | resnet18     | 93.48%        | 11.174M    | 43 MB           |
+| 6   | resnet34     | 93.82%        | 21.282M    | 81 MB           |
+| 7   | resnet50     | 94.38%        | 23.521M    | 90 MB           |
+| 8   | mobilenet_v2 | 93.85%        | 2.237M     | 9 MB            |
+| 9   | densenet121  | 94.76%        | 6.956M     | 27 MB           |
+| 10  | googlenet    | 95.08%        | 5.491M     | 21 MB           |
 
 I will add more models...
 
@@ -23,7 +23,7 @@ I will add more models...
 
 **Download the weights**
 
-[Google Drive Link (2GB)](https://drive.google.com/file/d/1JNURU6GRDhvMUMqIbxj27gTJ6P9XuAN6/view?usp=sharing) unzip and put the *state_dicts* folder in *models* folder.
+Download weights from [Google Drive Link](https://drive.google.com/drive/folders/15jBlLkOFg0eK-pwsmXoSesNDyDb_HOeV?usp=sharing), and put the weights in **models/state_dicts/** folder.
 
 ```python
 from models import *
