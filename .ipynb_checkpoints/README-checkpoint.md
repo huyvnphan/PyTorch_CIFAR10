@@ -15,6 +15,7 @@
 | 7   | resnet50     | 94.38%        |
 | 8   | mobilenet_v2 | 93.85%        |
 | 9   | densenet121  | 94.76%        |
+| 10  | googlenet    | 95.08%        |
 
 I will add more models...
 
