@@ -2,16 +2,9 @@ from collections import namedtuple
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from .utils import load_state_dict_from_url
-
 
 __all__ = ['Inception3', 'inception_v3']
 
-
-model_urls = {
-    # Inception v3 ported from TensorFlow
-    'inception_v3_google': 'https://download.pytorch.org/models/inception_v3_google-1a9a5a14.pth',
-}
 
 _InceptionOuputs = namedtuple('InceptionOuputs', ['logits', 'aux_logits'])
 
@@ -32,37 +25,25 @@ def inception_v3(pretrained=False, progress=True, **kwargs):
         transform_input (bool): If True, preprocesses the input according to the method with which it
             was trained on ImageNet. Default: *False*
     """
+    model = Inception3()
     if pretrained:
-        if 'transform_input' not in kwargs:
-            kwargs['transform_input'] = True
-        if 'aux_logits' in kwargs:
-            original_aux_logits = kwargs['aux_logits']
-            kwargs['aux_logits'] = True
-        else:
-            original_aux_logits = True
-        model = Inception3(**kwargs)
-        state_dict = load_state_dict_from_url(model_urls['inception_v3_google'],
-                                              progress=progress)
+        state_dict = torch.load('models/state_dicts/inception_v3.pt', map_location='cpu')
         model.load_state_dict(state_dict)
-        if not original_aux_logits:
-            model.aux_logits = False
-            del model.AuxLogits
-        return model
-
-    return Inception3(**kwargs)
-
+    return model
 
 class Inception3(nn.Module):
-
-    def __init__(self, num_classes=1000, aux_logits=True, transform_input=False):
+    ## CIFAR10: aux_logits True->False
+    def __init__(self, num_classes=10, aux_logits=False, transform_input=False):
         super(Inception3, self).__init__()
         self.aux_logits = aux_logits
         self.transform_input = transform_input
-        self.Conv2d_1a_3x3 = BasicConv2d(3, 32, kernel_size=3, stride=2)
-        self.Conv2d_2a_3x3 = BasicConv2d(32, 32, kernel_size=3)
-        self.Conv2d_2b_3x3 = BasicConv2d(32, 64, kernel_size=3, padding=1)
-        self.Conv2d_3b_1x1 = BasicConv2d(64, 80, kernel_size=1)
-        self.Conv2d_4a_3x3 = BasicConv2d(80, 192, kernel_size=3)
+        
+        ## CIFAR10: stride 2->1, padding 0 -> 1
+        self.Conv2d_1a_3x3 = BasicConv2d(3, 192, kernel_size=3, stride=1, padding=1)
+#         self.Conv2d_2a_3x3 = BasicConv2d(32, 32, kernel_size=3)
+#         self.Conv2d_2b_3x3 = BasicConv2d(32, 64, kernel_size=3, padding=1)
+#         self.Conv2d_3b_1x1 = BasicConv2d(64, 80, kernel_size=1)
+#         self.Conv2d_4a_3x3 = BasicConv2d(80, 192, kernel_size=3)
         self.Mixed_5b = InceptionA(192, pool_features=32)
         self.Mixed_5c = InceptionA(256, pool_features=64)
         self.Mixed_5d = InceptionA(288, pool_features=64)
@@ -99,18 +80,20 @@ class Inception3(nn.Module):
             x = torch.cat((x_ch0, x_ch1, x_ch2), 1)
         # N x 3 x 299 x 299
         x = self.Conv2d_1a_3x3(x)
+        
+        ## CIFAR10
         # N x 32 x 149 x 149
-        x = self.Conv2d_2a_3x3(x)
+#         x = self.Conv2d_2a_3x3(x)
         # N x 32 x 147 x 147
-        x = self.Conv2d_2b_3x3(x)
+#         x = self.Conv2d_2b_3x3(x)
         # N x 64 x 147 x 147
-        x = F.max_pool2d(x, kernel_size=3, stride=2)
+#         x = F.max_pool2d(x, kernel_size=3, stride=2)
         # N x 64 x 73 x 73
-        x = self.Conv2d_3b_1x1(x)
+#         x = self.Conv2d_3b_1x1(x)
         # N x 80 x 73 x 73
-        x = self.Conv2d_4a_3x3(x)
+#         x = self.Conv2d_4a_3x3(x)
         # N x 192 x 71 x 71
-        x = F.max_pool2d(x, kernel_size=3, stride=2)
+#         x = F.max_pool2d(x, kernel_size=3, stride=2)
         # N x 192 x 35 x 35
         x = self.Mixed_5b(x)
         # N x 256 x 35 x 35
