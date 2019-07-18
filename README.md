@@ -13,10 +13,12 @@
 | 5   | resnet18     | 93.48%        | 11.174 M   | 43 MB           |
 | 6   | resnet34     | 93.82%        | 21.282 M   | 81 MB           |
 | 7   | resnet50     | 94.38%        | 23.521 M   | 90 MB           |
-| 8   | mobilenet_v2 | 93.85%        | 2.237 M    | 9 MB            |
-| 9   | densenet121  | 94.76%        | 6.956 M    | 27 MB           |
-| 10  | googlenet    | 95.08%        | 5.491 M    | 21 MB           |
-| 11  | inception_v3 | 95.41%        | 21.64 M    | 83 MB           |
+| 8   | densenet121  | 94.76%        | 6.956 M    | 27 MB           |
+| 9   | densenet161  | 94.96%        | 26.483 M   | 102 MB          |
+| 10  | densenet169  | 94.74%        | 12.493 M   | 48 MB           |
+| 11  | mobilenet_v2 | 93.85%        | 2.237 M    | 9 MB            |
+| 12  | googlenet    | 95.08%        | 5.491 M    | 21 MB           |
+| 13  | inception_v3 | 95.41%        | 21.640 M   | 83 MB           |
 
 ## How To Use
 
