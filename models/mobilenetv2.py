@@ -109,7 +109,7 @@ class MobileNetV2(nn.Module):
         return x
 
 
-def mobilenet_v2(pretrained=False, progress=True, **kwargs):
+def mobilenet_v2(pretrained=False, progress=True, device='cpu', **kwargs):
     """
     Constructs a MobileNetV2 architecture from
     `"MobileNetV2: Inverted Residuals and Linear Bottlenecks" <https://arxiv.org/abs/1801.04381>`_.
@@ -120,6 +120,6 @@ def mobilenet_v2(pretrained=False, progress=True, **kwargs):
     """
     model = MobileNetV2(**kwargs)
     if pretrained:
-        state_dict = torch.load('models/state_dicts/mobilenet_v2.pt', map_location='cpu')
+        state_dict = torch.load('models/state_dicts/mobilenet_v2.pt', map_location=device)
         model.load_state_dict(state_dict)
     return model

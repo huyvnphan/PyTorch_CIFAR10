@@ -9,7 +9,7 @@ __all__ = ['Inception3', 'inception_v3']
 _InceptionOuputs = namedtuple('InceptionOuputs', ['logits', 'aux_logits'])
 
 
-def inception_v3(pretrained=False, progress=True, **kwargs):
+def inception_v3(pretrained=False, progress=True, device='cpu', **kwargs):
     r"""Inception v3 model architecture from
     `"Rethinking the Inception Architecture for Computer Vision" <http://arxiv.org/abs/1512.00567>`_.
 
@@ -27,7 +27,7 @@ def inception_v3(pretrained=False, progress=True, **kwargs):
     """
     model = Inception3()
     if pretrained:
-        state_dict = torch.load('models/state_dicts/inception_v3.pt', map_location='cpu')
+        state_dict = torch.load('models/state_dicts/inception_v3.pt', map_location=device)
         model.load_state_dict(state_dict)
     return model
 
@@ -59,18 +59,18 @@ class Inception3(nn.Module):
         self.Mixed_7c = InceptionE(2048)
         self.fc = nn.Linear(2048, num_classes)
 
-        for m in self.modules():
-            if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
-                import scipy.stats as stats
-                stddev = m.stddev if hasattr(m, 'stddev') else 0.1
-                X = stats.truncnorm(-2, 2, scale=stddev)
-                values = torch.as_tensor(X.rvs(m.weight.numel()), dtype=m.weight.dtype)
-                values = values.view(m.weight.size())
-                with torch.no_grad():
-                    m.weight.copy_(values)
-            elif isinstance(m, nn.BatchNorm2d):
-                nn.init.constant_(m.weight, 1)
-                nn.init.constant_(m.bias, 0)
+#         for m in self.modules():
+#             if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
+#                 import scipy.stats as stats
+#                 stddev = m.stddev if hasattr(m, 'stddev') else 0.1
+#                 X = stats.truncnorm(-2, 2, scale=stddev)
+#                 values = torch.as_tensor(X.rvs(m.weight.numel()), dtype=m.weight.dtype)
+#                 values = values.view(m.weight.size())
+#                 with torch.no_grad():
+#                     m.weight.copy_(values)
+#             elif isinstance(m, nn.BatchNorm2d):
+#                 nn.init.constant_(m.weight, 1)
+#                 nn.init.constant_(m.bias, 0)
 
     def forward(self, x):
         if self.transform_input:

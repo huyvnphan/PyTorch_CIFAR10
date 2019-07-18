@@ -10,7 +10,7 @@ __all__ = ['GoogLeNet', 'googlenet']
 _GoogLeNetOuputs = namedtuple('GoogLeNetOuputs', ['logits', 'aux_logits2', 'aux_logits1'])
 
 
-def googlenet(pretrained=False, progress=True, **kwargs):
+def googlenet(pretrained=False, progress=True, device='cpu', **kwargs):
     r"""GoogLeNet (Inception v1) model architecture from
     `"Going Deeper with Convolutions" <http://arxiv.org/abs/1409.4842>`_.
 
@@ -24,7 +24,7 @@ def googlenet(pretrained=False, progress=True, **kwargs):
     """
     model = GoogLeNet()
     if pretrained:
-        state_dict = torch.load('models/state_dicts/googlenet.pt', map_location='cpu')
+        state_dict = torch.load('models/state_dicts/googlenet.pt', map_location=device)
         model.load_state_dict(state_dict)
     return model
 
@@ -32,7 +32,7 @@ def googlenet(pretrained=False, progress=True, **kwargs):
 class GoogLeNet(nn.Module):
 
     ## CIFAR10: aux_logits True->False
-    def __init__(self, num_classes=10, aux_logits=False, transform_input=False, init_weights=True):
+    def __init__(self, num_classes=10, aux_logits=False, transform_input=False, init_weights=False):
         super(GoogLeNet, self).__init__()
         self.aux_logits = aux_logits
         self.transform_input = transform_input

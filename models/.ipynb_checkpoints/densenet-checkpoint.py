@@ -116,16 +116,15 @@ class DenseNet(nn.Module):
         out = self.classifier(out)
         return out
 
-def _densenet(arch, growth_rate, block_config, num_init_features, pretrained, progress,
-              **kwargs):
+def _densenet(arch, growth_rate, block_config, num_init_features, pretrained, progress, device, **kwargs):
     model = DenseNet(growth_rate, block_config, num_init_features, **kwargs)
     if pretrained:
-        state_dict = torch.load('models/state_dicts/'+arch+'.pt', map_location='cpu')
+        state_dict = torch.load('models/state_dicts/'+arch+'.pt', map_location=device)
         model.load_state_dict(state_dict)
     return model
 
 
-def densenet121(pretrained=False, progress=True, **kwargs):
+def densenet121(pretrained=False, progress=True, device='cpu', **kwargs):
     r"""Densenet-121 model from
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_
 
@@ -133,11 +132,11 @@ def densenet121(pretrained=False, progress=True, **kwargs):
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
     """
-    return _densenet('densenet121', 32, (6, 12, 24, 16), 64, pretrained, progress,
+    return _densenet('densenet121', 32, (6, 12, 24, 16), 64, pretrained, progress, device,
                      **kwargs)
 
 
-def densenet161(pretrained=False, progress=True, **kwargs):
+def densenet161(pretrained=False, progress=True, device='cpu', **kwargs):
     r"""Densenet-161 model from
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_
 
@@ -145,11 +144,11 @@ def densenet161(pretrained=False, progress=True, **kwargs):
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
     """
-    return _densenet('densenet161', 48, (6, 12, 36, 24), 96, pretrained, progress,
+    return _densenet('densenet161', 48, (6, 12, 36, 24), 96, pretrained, progress, device,
                      **kwargs)
 
 
-def densenet169(pretrained=False, progress=True, **kwargs):
+def densenet169(pretrained=False, progress=True, device='cpu', **kwargs):
     r"""Densenet-169 model from
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_
 
@@ -157,11 +156,11 @@ def densenet169(pretrained=False, progress=True, **kwargs):
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
     """
-    return _densenet('densenet169', 32, (6, 12, 32, 32), 64, pretrained, progress,
+    return _densenet('densenet169', 32, (6, 12, 32, 32), 64, pretrained, progress, device,
                      **kwargs)
 
 
-def densenet201(pretrained=False, progress=True, **kwargs):
+def densenet201(pretrained=False, progress=True, device='cpu', **kwargs):
     r"""Densenet-201 model from
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_
 
@@ -169,5 +168,5 @@ def densenet201(pretrained=False, progress=True, **kwargs):
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
     """
-    return _densenet('densenet201', 32, (6, 12, 48, 32), 64, pretrained, progress,
+    return _densenet('densenet201', 32, (6, 12, 48, 32), 64, pretrained, progress, device,
                      **kwargs)
