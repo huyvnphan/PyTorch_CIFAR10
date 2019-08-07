@@ -4,3 +4,4 @@ from .vgg import *
 from .densenet import *
 from .inception import *
 from .googlenet import *
+from .resnet_orig import *
