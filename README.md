@@ -4,7 +4,7 @@
 - I also share the **weights** of these models, so you can just load the weights and use them.
 
 ## Statistics of supported models
-| No. | Model        | Test Accuracy | Parameters | State Dict Size |
+| No. | Model        | Validation Accuracy | Parameters | State Dict Size |
 |-----|--------------|---------------|------------|-----------------|
 | 1   | vgg11_bn     | 92.61%        | 128.813 M  | 491 MB          |
 | 2   | vgg13_bn     | 94.27%        | 128.998 M  | 492 MB          |
