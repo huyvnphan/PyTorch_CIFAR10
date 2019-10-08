@@ -4,21 +4,21 @@
 - I also share the **weights** of these models, so you can just load the weights and use them.
 
 ## Statistics of supported models
-| No. | Model        | Validation Accuracy | Parameters | State Dict Size |
-|-----|--------------|---------------|------------|-----------------|
-| 1   | vgg11_bn     | 92.61%        | 128.813 M  | 491 MB          |
-| 2   | vgg13_bn     | 94.27%        | 128.998 M  | 492 MB          |
-| 3   | vgg16_bn     | 94.07%        | 134.310 M  | 512 MB          |
-| 4   | vgg19_bn     | 94.25%        | 139.622 M  | 533 MB          |
-| 5   | resnet18     | 93.48%        | 11.174 M   | 43 MB           |
-| 6   | resnet34     | 93.82%        | 21.282 M   | 81 MB           |
-| 7   | resnet50     | 94.38%        | 23.521 M   | 90 MB           |
-| 8   | densenet121  | 94.76%        | 6.956 M    | 27 MB           |
-| 9   | densenet161  | 94.96%        | 26.483 M   | 102 MB          |
-| 10  | densenet169  | 94.74%        | 12.493 M   | 48 MB           |
-| 11  | mobilenet_v2 | 93.85%        | 2.237 M    | 9 MB            |
-| 12  | googlenet    | 95.08%        | 5.491 M    | 21 MB           |
-| 13  | inception_v3 | 95.41%        | 21.640 M   | 83 MB           |
+| No. |     Model    | Val. Acc. | No. Params |   Size |
+|:---:|:------------:|:---------:|-----------:|-------:|
+| 1   | vgg11_bn     |   92.61%  |  128.813 M | 491 MB |
+| 2   | vgg13_bn     |   94.27%  |  128.998 M | 492 MB |
+| 3   | vgg16_bn     |   94.07%  |  134.310 M | 512 MB |
+| 4   | vgg19_bn     |   94.25%  |  139.622 M | 533 MB |
+| 5   | resnet18     |   93.48%  |   11.174 M |  43 MB |
+| 6   | resnet34     |   93.82%  |   21.282 M |  81 MB |
+| 7   | resnet50     |   94.38%  |   23.521 M |  90 MB |
+| 8   | densenet121  |   94.76%  |    6.956 M |  27 MB |
+| 9   | densenet161  |   94.96%  |   26.483 M | 102 MB |
+| 10  | densenet169  |   94.74%  |   12.493 M |  48 MB |
+| 11  | mobilenet_v2 |   93.85%  |    2.237 M |   9 MB |
+| 12  | googlenet    |   95.08%  |    5.491 M |  21 MB |
+| 13  | inception_v3 |   95.41%  |   21.640 M |  83 MB |
 
 ## How To Use
 
