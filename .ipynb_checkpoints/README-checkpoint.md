@@ -27,7 +27,7 @@
 Download weights from [Google Drive Link](https://drive.google.com/drive/folders/15jBlLkOFg0eK-pwsmXoSesNDyDb_HOeV?usp=sharing), and put the weights in **models/state_dicts/** folder.
 
 ```python
-from models import *
+from cifar10_models import *
 
 # Untrained model
 my_model = vgg11_bn()
