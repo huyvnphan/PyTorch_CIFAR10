@@ -36,6 +36,11 @@ my_model = vgg11_bn()
 my_model = vgg11_bn(pretrained=True)
 ```
 
+**From torch hub**
+```python
+model = torch.hub.load('mariogeiger/PyTorch-CIFAR10', 'resnet18', pretrained=True)
+```
+
 **Remember to normalize data before feeding to model**
 ```python
 transforms.Normalize([0.4914, 0.4822, 0.4465], [0.2023, 0.1994, 0.2010])]
