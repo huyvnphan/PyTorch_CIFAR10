@@ -69,7 +69,7 @@ class DenseNet(nn.Module):
         super(DenseNet, self).__init__()
 
         # First convolution
-        
+
         # CIFAR-10: kernel_size 7 ->3, stride 2->1, padding 3->1
         self.features = nn.Sequential(OrderedDict([
             ('conv0', nn.Conv2d(3, num_init_features, kernel_size=3, stride=1,
@@ -120,8 +120,9 @@ class DenseNet(nn.Module):
 def _densenet(arch, growth_rate, block_config, num_init_features, pretrained, progress, device, **kwargs):
     model = DenseNet(growth_rate, block_config, num_init_features, **kwargs)
     if pretrained:
-        script_dir = os.path.dirname(__file__)
-        state_dict = torch.load(script_dir + '/state_dicts/'+arch+'.pt', map_location=device)
+        from torch.hub import load_state_dict_from_url
+        url = "https://github.com/mariogeiger/PyTorch-CIFAR10/releases/download/1.3/{}.pt".format(arch)
+        state_dict = load_state_dict_from_url(url, map_location='cpu', progress=progress)
         model.load_state_dict(state_dict)
     return model
 

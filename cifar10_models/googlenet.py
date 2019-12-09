@@ -25,8 +25,9 @@ def googlenet(pretrained=False, progress=True, device='cpu', **kwargs):
     """
     model = GoogLeNet()
     if pretrained:
-        script_dir = os.path.dirname(__file__)
-        state_dict = torch.load(script_dir + '/state_dicts/googlenet.pt', map_location=device)
+        from torch.hub import load_state_dict_from_url
+        url = "https://github.com/mariogeiger/PyTorch-CIFAR10/releases/download/1.3/googlenet.pt"
+        state_dict = load_state_dict_from_url(url, map_location='cpu', progress=progress)
         model.load_state_dict(state_dict)
     return model
 
@@ -38,7 +39,7 @@ class GoogLeNet(nn.Module):
         super(GoogLeNet, self).__init__()
         self.aux_logits = aux_logits
         self.transform_input = transform_input
-        
+
         ## CIFAR10: out_channels 64->192, kernel_size 7->3, stride 2->1, padding 3->1
         self.conv1 = BasicConv2d(3, 192, kernel_size=3, stride=1, padding=1)
 #         self.maxpool1 = nn.MaxPool2d(3, stride=2, ceil_mode=True)
@@ -49,7 +50,7 @@ class GoogLeNet(nn.Module):
 
         self.inception3a = Inception(192, 64, 96, 128, 16, 32, 32)
         self.inception3b = Inception(256, 128, 128, 192, 32, 96, 64)
-        
+
         ## CIFAR10: padding 0->1, ciel_model True->False
         self.maxpool3 = nn.MaxPool2d(3, stride=2, padding=1, ceil_mode=False)
         ## END
@@ -59,11 +60,11 @@ class GoogLeNet(nn.Module):
         self.inception4c = Inception(512, 128, 128, 256, 24, 64, 64)
         self.inception4d = Inception(512, 112, 144, 288, 32, 64, 64)
         self.inception4e = Inception(528, 256, 160, 320, 32, 128, 128)
-        
+
         ## CIFAR10: kernel_size 2->3, padding 0->1, ciel_model True->False
         self.maxpool4 = nn.MaxPool2d(3, stride=2, padding=1, ceil_mode=False)
         ## END
-        
+
         self.inception5a = Inception(832, 256, 160, 320, 32, 128, 128)
         self.inception5b = Inception(832, 384, 192, 384, 48, 128, 128)
 
@@ -100,7 +101,7 @@ class GoogLeNet(nn.Module):
 
         # N x 3 x 224 x 224
         x = self.conv1(x)
-        
+
         ## CIFAR10
         # N x 64 x 112 x 112
 #         x = self.maxpool1(x)

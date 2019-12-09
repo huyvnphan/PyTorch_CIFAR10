@@ -80,7 +80,8 @@ class ResNet(nn.Module):
 def resnet_orig(pretrained=True, device='cpu'):
     net = ResNet(BasicBlock, [3, 3, 3])
     if pretrained:
-        script_dir = os.path.dirname(__file__)
-        state_dict = torch.load(script_dir + '/state_dicts/resnet_orig.pt', map_location=device)
+        from torch.hub import load_state_dict_from_url
+        url = "https://github.com/mariogeiger/PyTorch-CIFAR10/releases/download/1.3/resnet_orig.pt"
+        state_dict = load_state_dict_from_url(url, map_location='cpu', progress=False)
         net.load_state_dict(state_dict)
     return net

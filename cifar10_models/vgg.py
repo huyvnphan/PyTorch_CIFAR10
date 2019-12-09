@@ -75,8 +75,9 @@ def _vgg(arch, cfg, batch_norm, pretrained, progress, device, **kwargs):
         kwargs['init_weights'] = False
     model = VGG(make_layers(cfgs[cfg], batch_norm=batch_norm), **kwargs)
     if pretrained:
-        script_dir = os.path.dirname(__file__)
-        state_dict = torch.load(script_dir + '/state_dicts/'+arch+'.pt', map_location=device)
+        from torch.hub import load_state_dict_from_url
+        url = "https://github.com/mariogeiger/PyTorch-CIFAR10/releases/download/1.3/{}.pt".format(arch)
+        state_dict = load_state_dict_from_url(url, map_location='cpu', progress=progress)
         model.load_state_dict(state_dict)
     return model
 

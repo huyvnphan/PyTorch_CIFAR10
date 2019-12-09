@@ -28,8 +28,9 @@ def inception_v3(pretrained=False, progress=True, device='cpu', **kwargs):
     """
     model = Inception3()
     if pretrained:
-        script_dir = os.path.dirname(__file__)
-        state_dict = torch.load(script_dir + '/state_dicts/inception_v3.pt', map_location=device)
+        from torch.hub import load_state_dict_from_url
+        url = "https://github.com/mariogeiger/PyTorch-CIFAR10/releases/download/1.3/inception_v3.pt"
+        state_dict = load_state_dict_from_url(url, map_location='cpu', progress=progress)
         model.load_state_dict(state_dict)
     return model
 
@@ -39,7 +40,7 @@ class Inception3(nn.Module):
         super(Inception3, self).__init__()
         self.aux_logits = aux_logits
         self.transform_input = transform_input
-        
+
         ## CIFAR10: stride 2->1, padding 0 -> 1
         self.Conv2d_1a_3x3 = BasicConv2d(3, 192, kernel_size=3, stride=1, padding=1)
 #         self.Conv2d_2a_3x3 = BasicConv2d(32, 32, kernel_size=3)
@@ -82,7 +83,7 @@ class Inception3(nn.Module):
             x = torch.cat((x_ch0, x_ch1, x_ch2), 1)
         # N x 3 x 299 x 299
         x = self.Conv2d_1a_3x3(x)
-        
+
         ## CIFAR10
         # N x 32 x 149 x 149
 #         x = self.Conv2d_2a_3x3(x)

@@ -50,7 +50,7 @@ class MobileNetV2(nn.Module):
         block = InvertedResidual
         input_channel = 32
         last_channel = 1280
-        
+
         ## CIFAR10
         inverted_residual_setting = [
             # t, c, n, s
@@ -67,11 +67,11 @@ class MobileNetV2(nn.Module):
         # building first layer
         input_channel = int(input_channel * width_mult)
         self.last_channel = int(last_channel * max(1.0, width_mult))
-        
+
         # CIFAR10: stride 2 -> 1
         features = [ConvBNReLU(3, input_channel, stride=1)]
         # END
-        
+
         # building inverted residual blocks
         for t, c, n, s in inverted_residual_setting:
             output_channel = int(c * width_mult)
@@ -121,7 +121,8 @@ def mobilenet_v2(pretrained=False, progress=True, device='cpu', **kwargs):
     """
     model = MobileNetV2(**kwargs)
     if pretrained:
-        script_dir = os.path.dirname(__file__)
-        state_dict = torch.load(script_dir+'/state_dicts/mobilenet_v2.pt', map_location=device)
+        from torch.hub import load_state_dict_from_url
+        url = "https://github.com/mariogeiger/PyTorch-CIFAR10/releases/download/1.3/mobilenet_v2.pt"
+        state_dict = load_state_dict_from_url(url, map_location='cpu', progress=progress)
         model.load_state_dict(state_dict)
     return model
