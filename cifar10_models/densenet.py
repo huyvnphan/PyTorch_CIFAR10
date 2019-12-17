@@ -120,10 +120,12 @@ class DenseNet(nn.Module):
 def _densenet(arch, growth_rate, block_config, num_init_features, pretrained, progress, device, **kwargs):
     model = DenseNet(growth_rate, block_config, num_init_features, **kwargs)
     if pretrained:
-        from torch.hub import load_state_dict_from_url
         url = "https://github.com/mariogeiger/PyTorch-CIFAR10/releases/download/1.3/{}.pt".format(arch)
-        state_dict = load_state_dict_from_url(url, map_location='cpu', progress=progress)
-        model.load_state_dict(state_dict)
+    else:
+        url = "https://github.com/mariogeiger/PyTorch-CIFAR10/releases/download/1.3/init_{}.pt".format(arch)
+    from torch.hub import load_state_dict_from_url
+    state_dict = load_state_dict_from_url(url, map_location='cpu', progress=progress)
+    model.load_state_dict(state_dict)
     return model
 
 
