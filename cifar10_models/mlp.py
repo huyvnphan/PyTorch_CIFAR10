@@ -70,7 +70,7 @@ class MLP(nn.Sequential):
 
         for i in range(L):
             self.add_module('linear%d' % (i + 1), Linear(m(), m(n), beta))
-            self.add_module('act%d' % (i + 1), nn.Swish())
+            self.add_module('act%d' % (i + 1), Swish())
 
         self.add_module('classifier', Linear(m(), m(10), beta))
 
