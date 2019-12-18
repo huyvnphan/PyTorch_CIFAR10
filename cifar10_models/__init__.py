@@ -5,3 +5,4 @@ from .densenet import *
 from .resnet_orig import *
 from .googlenet import *
 from .inception import *
+from .mlp import *
