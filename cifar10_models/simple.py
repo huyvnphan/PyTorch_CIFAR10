@@ -140,6 +140,11 @@ class ConvNet(nn.Module):
 
             C(m(), m(), k=1),
             Swish(),
+            C(m(), m(), k=3, groups=m()),
+            Swish(),
+
+            C(m(), m(), k=1),
+            Swish(),
             C(m(), m(), k=3, groups=m(), stride=2), # 32 -> 8
             Swish(),
 
