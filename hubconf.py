@@ -15,3 +15,4 @@ from cifar10_models import resnet50
 # from cifar10_models import vgg16_bn
 # from cifar10_models import vgg19_bn
 from cifar10_models import mlp5
+from cifar10_models import convnet
