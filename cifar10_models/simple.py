@@ -127,10 +127,20 @@ class ConvNet(nn.Module):
         self.seq = nn.Sequential(
             C(m(), m(32), k=1),
             Swish(),
+            C(m(), m(), k=3, groups=m()),
+            Swish(),
+
+            C(m(), m(), k=1),
+            Swish(),
             C(m(), m(), k=3, groups=m(), stride=2),  # 32 -> 16
             Swish(),
 
             C(m(), m(64), k=1),
+            Swish(),
+            C(m(), m(), k=3, groups=m()),
+            Swish(),
+
+            C(m(), m(), k=1),
             Swish(),
             C(m(), m(), k=3, groups=m()),
             Swish(),
@@ -152,10 +162,15 @@ class ConvNet(nn.Module):
 
             C(m(), m(128), k=1),
             Swish(),
+            C(m(), m(), k=3, groups=m()),
+            Swish(),
+
+            C(m(), m(), k=1),
+            Swish(),
             C(m(), m(), k=3, groups=m(), stride=2), # 8 -> 4
             Swish(),
 
-            C(m(), m(128), k=1),
+            C(m(), m(), k=1),
             Swish(),
             C(m(), m(), k=3, groups=m()),
             Swish(),
