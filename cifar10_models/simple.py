@@ -144,83 +144,78 @@ def mlp5(pretrained=False, progress=True, **kwargs):
 
 
 class ConvNet(nn.Module):
-    def __init__(self, beta):
+    def __init__(self, n, L1, L2, L3, beta):
         super().__init__()
 
         C = partial(Conv, beta=beta)
         m = Memory(3)
 
-        self.seq = nn.Sequential(
-            C(m(), m(32), k=1),
-            Swish(),
-            C(m(), m(), k=3, groups=m()),
-            Swish(),
+        # (L1 + L2 + L3) * 2 + 7
 
-            C(m(), m(), k=1),
-            Swish(),
-            C(m(), m(), k=3, groups=m()),
-            Swish(),
+        seq = [
+            nn.Sequential(
+                C(m(), m(n), k=1),
+                Swish(),
+                C(m(), m(), k=3, groups=m()),
+                Swish(),
+            )
+            for _ in range(L1)
+        ]
 
-            C(m(), m(), k=1),
-            Swish(),
-            C(m(), m(), k=3, groups=m(), stride=2),  # 32 -> 16
-            Swish(),
+        seq += [
+            nn.Sequential(
+                C(m(), m(), k=1),
+                Swish(),
+                C(m(), m(), k=3, groups=m(), stride=2),  # 32 -> 16
+                Swish(),
+            ),
+        ]
 
-            C(m(), m(64), k=1),
-            Swish(),
-            C(m(), m(), k=3, groups=m()),
-            Swish(),
+        seq += [
+            nn.Sequential(
+                C(m(), m(2*n), k=1),
+                Swish(),
+                C(m(), m(), k=3, groups=m()),
+                Swish(),
+            )
+            for _ in range(L2)
+        ]
 
-            C(m(), m(), k=1),
-            Swish(),
-            C(m(), m(), k=3, groups=m()),
-            Swish(),
+        seq += [
+            nn.Sequential(
+                C(m(), m(), k=1),
+                Swish(),
+                C(m(), m(), k=3, groups=m(), stride=2), # 32 -> 8
+                Swish(),
+            ),
+        ]
 
-            C(m(), m(), k=1),
-            Swish(),
-            C(m(), m(), k=3, groups=m()),
-            Swish(),
+        seq += [
+            nn.Sequential(
+                C(m(), m(4*n), k=1),
+                Swish(),
+                C(m(), m(), k=3, groups=m()),
+                Swish(),
+            )
+            for _ in range(L3)
+        ]
 
-            C(m(), m(), k=1),
-            Swish(),
-            C(m(), m(), k=3, groups=m()),
-            Swish(),
-
-            C(m(), m(), k=1),
-            Swish(),
-            C(m(), m(), k=3, groups=m()),
-            Swish(),
-
-            C(m(), m(), k=1),
-            Swish(),
-            C(m(), m(), k=3, groups=m(), stride=2), # 32 -> 8
-            Swish(),
-
-            C(m(), m(128), k=1),
-            Swish(),
-            C(m(), m(), k=3, groups=m()),
-            Swish(),
-
-            C(m(), m(), k=1),
-            Swish(),
-            C(m(), m(), k=3, groups=m(), stride=2), # 8 -> 4
-            Swish(),
-
-            C(m(), m(), k=1),
-            Swish(),
-            C(m(), m(), k=3, groups=m()),
-            Swish(),
-
-            C(m(), m(), k=1),
-            Swish(),
-            C(m(), m(), k=3, groups=m()),
-            Swish(),
-
-            C(m(), m(256), k=1),
-            Swish(),
+        seq += [
+            nn.Sequential(
+                C(m(), m(), k=1),
+                Swish(),
+                C(m(), m(), k=3, groups=m(), stride=2), # 8 -> 4
+                Swish(),
+            ),
+            nn.Sequential(
+                C(m(), m(8*n), k=1),
+                Swish(),
+            ),
 
             nn.AdaptiveAvgPool2d(1)
-        )
+        ]
+
+        self.seq = nn.Sequential(*seq)
 
         self.classifier = Linear(m(), m(10), beta)
 
@@ -229,8 +224,8 @@ class ConvNet(nn.Module):
         return self.classifier(x)
 
 
-def _convnet(arch, beta, pretrained, progress):
-    model = ConvNet(beta)
+def _convnet(arch, n, L1, L2, L3, beta, pretrained, progress):
+    model = ConvNet(n, L1, L2, L3, beta)
     if pretrained:
         url = "https://github.com/mariogeiger/PyTorch-CIFAR10/releases/download/1.3/{}.pt".format(arch)
         from torch.hub import load_state_dict_from_url
@@ -239,11 +234,31 @@ def _convnet(arch, beta, pretrained, progress):
     return model
 
 
-def convnet(pretrained=False, progress=True):
+def convnet23(pretrained=False, progress=True):
     r"""ConvNet
 
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
     """
-    return _convnet('convnet', 0.1, pretrained, progress)
+    return _convnet('convnet23', 32, 2, 5, 1, 0.1, pretrained, progress)
+
+
+def convnet31(pretrained=False, progress=True):
+    r"""ConvNet
+
+    Args:
+        pretrained (bool): If True, returns a model pre-trained on ImageNet
+        progress (bool): If True, displays a progress bar of the download to stderr
+    """
+    return _convnet('convnet31', 48, 3, 7, 2, 0.1, pretrained, progress)
+
+
+def convnet43(pretrained=False, progress=True):
+    r"""ConvNet
+
+    Args:
+        pretrained (bool): If True, returns a model pre-trained on ImageNet
+        progress (bool): If True, displays a progress bar of the download to stderr
+    """
+    return _convnet('convnet43', 64, 5, 10, 3, 0.1, pretrained, progress)
