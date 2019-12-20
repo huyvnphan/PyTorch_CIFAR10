@@ -38,11 +38,36 @@ class Swish(nn.Module):
         return swish(x)
 
 
+def orthogonal_(tensor, gain=1):
+    # proper orthogonal init, see https://github.com/pytorch/pytorch/pull/10672
+    if tensor.ndimension() < 2:
+        raise ValueError("Only tensors with 2 or more dimensions are supported")
+
+    rows = tensor.size(0)
+    cols = tensor[0].numel()
+    flattened = tensor.new_empty(rows, cols).normal_(0, 1)
+
+    for i in range(0, rows, cols):
+        # Compute the qr factorization
+        q, r = torch.qr(flattened[i:i + cols].t())
+        # Make Q uniform according to https://arxiv.org/pdf/math-ph/0609050.pdf
+        q *= torch.diag(r, 0).sign()
+        q.t_()
+
+        with torch.no_grad():
+            tensor[i:i + cols].view_as(q).copy_(q)
+
+    with torch.no_grad():
+        tensor.mul_(gain * cols ** 0.5)
+    return tensor
+
+
 class Conv(nn.Module):
     def __init__(self, n_in, n_out, beta, k=3, padding=None, groups=1, **kargs):
         super().__init__()
         self.weight = nn.Parameter(torch.randn(n_out, n_in // groups, k, k))
         self.omega = (n_in // groups * k ** 2) ** -0.5
+        orthogonal_(self.weight)
 
         self.bias = nn.Parameter(torch.zeros(n_out))
         self.beta = beta
@@ -62,6 +87,7 @@ class Linear(nn.Module):
         super().__init__()
         self.weight = nn.Parameter(torch.randn(n_out, n_in))
         self.omega = n_in ** -0.5
+        orthogonal_(self.weight)
 
         self.bias = nn.Parameter(torch.zeros(n_out))
         self.beta = beta
@@ -132,10 +158,20 @@ class ConvNet(nn.Module):
 
             C(m(), m(), k=1),
             Swish(),
+            C(m(), m(), k=3, groups=m()),
+            Swish(),
+
+            C(m(), m(), k=1),
+            Swish(),
             C(m(), m(), k=3, groups=m(), stride=2),  # 32 -> 16
             Swish(),
 
             C(m(), m(64), k=1),
+            Swish(),
+            C(m(), m(), k=3, groups=m()),
+            Swish(),
+
+            C(m(), m(), k=1),
             Swish(),
             C(m(), m(), k=3, groups=m()),
             Swish(),
@@ -168,11 +204,6 @@ class ConvNet(nn.Module):
             C(m(), m(), k=1),
             Swish(),
             C(m(), m(), k=3, groups=m(), stride=2), # 8 -> 4
-            Swish(),
-
-            C(m(), m(), k=1),
-            Swish(),
-            C(m(), m(), k=3, groups=m()),
             Swish(),
 
             C(m(), m(256), k=1),
