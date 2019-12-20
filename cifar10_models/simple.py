@@ -72,11 +72,13 @@ class Linear(nn.Module):
 
 class Memory:
     def __init__(self, x=None):
-        self.x = x
+        self.x = [] if x is None else [x]
     def __call__(self, x=None):
         if x is not None:
-            self.x = x
-        return self.x
+            self.x.insert(0, x)
+        return self.x[0]
+    def __getitem__(self, i):
+        return self.x[i]
 
 
 class MLP(nn.Sequential):
@@ -123,12 +125,12 @@ class ConvNet(nn.Module):
         m = Memory(3)
 
         self.seq = nn.Sequential(
-            C(m(), m(16), k=1),
+            C(m(), m(32), k=1),
             Swish(),
             C(m(), m(), k=3, groups=m(), stride=2),  # 32 -> 16
             Swish(),
 
-            C(m(), m(32), k=1),
+            C(m(), m(64), k=1),
             Swish(),
             C(m(), m(), k=3, groups=m()),
             Swish(),
@@ -148,7 +150,7 @@ class ConvNet(nn.Module):
             C(m(), m(), k=3, groups=m(), stride=2), # 32 -> 8
             Swish(),
 
-            C(m(), m(64), k=1),
+            C(m(), m(128), k=1),
             Swish(),
             C(m(), m(), k=3, groups=m(), stride=2), # 8 -> 4
             Swish(),
@@ -158,7 +160,7 @@ class ConvNet(nn.Module):
             C(m(), m(), k=3, groups=m()),
             Swish(),
 
-            C(m(), m(512), k=1),
+            C(m(), m(256), k=1),
             Swish(),
 
             nn.AdaptiveAvgPool2d(1)
