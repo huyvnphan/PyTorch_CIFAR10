@@ -43,12 +43,13 @@ class CIFAR10_Module(pl.LightningModule):
         self.mean = [0.4914, 0.4822, 0.4465]
         self.std = [0.2023, 0.1994, 0.2010]
         self.model = get_classifier(hparams.classifier, hparams.pretrained)
+        self.val_size = len(self.val_dataloader().dataset)
         
     def forward(self, batch):
         images, labels = batch
         predictions = self.model(images)
         loss = self.criterion(predictions, labels)
-        accuracy = torch.sum(torch.max(predictions, 1)[1] == labels.data).float() / images.size(0)
+        accuracy = torch.sum(torch.max(predictions, 1)[1] == labels.data).float() / batch[0].size(0)
         return loss, accuracy
     
     def training_step(self, batch, batch_nb):
@@ -57,26 +58,24 @@ class CIFAR10_Module(pl.LightningModule):
         return {'loss': loss, 'log': logs}
         
     def validation_step(self, batch, batch_nb):
-        loss, accuracy = self.forward(batch)
-        logs = {'loss/val': loss, 'accuracy/val': accuracy}
+        avg_loss, accuracy = self.forward(batch)
+        loss = avg_loss * batch[0].size(0)
+        corrects = accuracy * batch[0].size(0)
+        logs = {'loss/val': loss, 'corrects': corrects}
         return logs
                 
     def validation_epoch_end(self, outputs):
-        loss = torch.stack([x['loss/val'] for x in outputs]).mean()
-        accuracy = torch.stack([x['accuracy/val'] for x in outputs]).mean()
+        loss = torch.stack([x['loss/val'] for x in outputs]).sum() / self.val_size
+        accuracy = torch.stack([x['corrects'] for x in outputs]).sum() / self.val_size
         logs = {'loss/val': loss, 'accuracy/val': accuracy}
         return {'val_loss': loss, 'log': logs}
     
     def test_step(self, batch, batch_nb):
-        _, accuracy = self.forward(batch)
-        corrects = accuracy * batch[0].size(0)
-        logs = {'corrects': corrects}
-        return logs
+        return self.validation_step(batch, batch_nb)
     
     def test_epoch_end(self, outputs):
-        corrects = torch.stack([x['corrects'] for x in outputs]).sum()
-        test_dataset_length = len(self.test_dataloader().dataset)
-        accuracy = round(100 * (corrects / test_dataset_length).item(), 2)
+        accuracy = self.validation_epoch_end(outputs)['log']['accuracy/val']
+        accuracy = round((100 * accuracy).item(), 2)
         return {'progress_bar': {'Accuracy': accuracy}}
         
     def configure_optimizers(self):
@@ -101,12 +100,8 @@ class CIFAR10_Module(pl.LightningModule):
         transform_val = transforms.Compose([transforms.ToTensor(),
                                             transforms.Normalize(self.mean, self.std)])
         dataset = CIFAR10(root=self.hparams.data_dir, train=False, transform=transform_val)
-        dataloader = DataLoader(dataset, batch_size=self.hparams.batch_size, num_workers=4, shuffle=True, drop_last=True, pin_memory=True)
+        dataloader = DataLoader(dataset, batch_size=self.hparams.batch_size, num_workers=4, shuffle=True, pin_memory=True)
         return dataloader
     
     def test_dataloader(self):
-        transform_test = transforms.Compose([transforms.ToTensor(),
-                                            transforms.Normalize(self.mean, self.std)])
-        dataset = CIFAR10(root=self.hparams.data_dir, train=False, transform=transform_test)
-        dataloader = DataLoader(dataset, batch_size=self.hparams.batch_size, num_workers=4)
-        return dataloader
+        return self.val_dataloader()

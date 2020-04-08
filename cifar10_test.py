@@ -1,3 +1,4 @@
+import os, shutil
 import torch
 from argparse import ArgumentParser
 from pytorch_lightning import Trainer
@@ -6,9 +7,10 @@ from cifar10_module import CIFAR10_Module
 def main(hparams):    
     torch.cuda.set_device(hparams.gpu)
     model = CIFAR10_Module(hparams)
-    trainer = Trainer(gpus=[hparams.gpu])
+    trainer = Trainer(gpus=[hparams.gpu], default_save_path=os.path.join(os.getcwd(), 'test_temp'))
     trainer.test(model)
-    
+    shutil.rmtree(os.path.join(os.getcwd(), 'test_temp'))
+
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('--classifier', type=str, default='resnet18')
