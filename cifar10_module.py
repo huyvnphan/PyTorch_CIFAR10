@@ -5,42 +5,44 @@ from torchvision.datasets import CIFAR10
 from torch.utils.data import DataLoader
 from cifar10_models import *
 
-def get_classifier(classifier):
+def get_classifier(classifier, pretrained):
     if classifier == 'vgg11_bn':
-        return vgg11_bn()
+        return vgg11_bn(pretrained=pretrained)
     elif classifier == 'vgg13_bn':
-        return vgg13_bn()
+        return vgg13_bn(pretrained=pretrained)
     elif classifier == 'vgg16_bn':
-        return vgg16_bn()
+        return vgg16_bn(pretrained=pretrained)
     elif classifier == 'vgg19_bn':
-        return vgg19_bn()
+        return vgg19_bn(pretrained=pretrained)
     elif classifier == 'resnet18':
-        return resnet18()
+        return resnet18(pretrained=pretrained)
     elif classifier == 'resnet34':
-        return resnet34()
+        return resnet34(pretrained=pretrained)
     elif classifier == 'resnet50':
-        return resnet50()
+        return resnet50(pretrained=pretrained)
     elif classifier == 'densenet121':
-        return densenet121()
+        return densenet121(pretrained=pretrained)
     elif classifier == 'densenet161':
-        return densenet161()
-    elif classifier == 'densnet169':
-        return densenet169()
+        return densenet161(pretrained=pretrained)
+    elif classifier == 'densenet169':
+        return densenet169(pretrained=pretrained)
     elif classifier == 'mobilenet_v2':
-        return mobilenet_v2()
+        return mobilenet_v2(pretrained=pretrained)
     elif classifier == 'googlenet':
-        return googlenet()
+        return googlenet(pretrained=pretrained)
     elif classifier == 'inception_v3':
-        return inception_v3()
-
+        return inception_v3(pretrained=pretrained)
+    else:
+        raise NameError('Please enter a valid classifier')
+        
 class CIFAR10_Module(pl.LightningModule):
     def __init__(self, hparams):
         super().__init__()
         self.hparams = hparams
-        self.model = get_classifier(hparams.classifier)
         self.criterion = torch.nn.CrossEntropyLoss()
         self.mean = [0.4914, 0.4822, 0.4465]
         self.std = [0.2023, 0.1994, 0.2010]
+        self.model = get_classifier(hparams.classifier, hparams.pretrained)
         
     def forward(self, batch):
         images, labels = batch
@@ -74,7 +76,7 @@ class CIFAR10_Module(pl.LightningModule):
     def test_epoch_end(self, outputs):
         corrects = torch.stack([x['corrects'] for x in outputs]).sum()
         test_dataset_length = len(self.test_dataloader().dataset)
-        accuracy = round((corrects / test_dataset_length).item(), 2)
+        accuracy = round(100 * (corrects / test_dataset_length).item(), 2)
         return {'progress_bar': {'Accuracy': accuracy}}
         
     def configure_optimizers(self):
