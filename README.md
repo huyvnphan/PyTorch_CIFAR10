@@ -68,9 +68,9 @@ Then go to
 `http://localhost:YOUR_PORT_NUMBER`
 
 ## Requirements
-- tqdm >= 4.44.1
-- numpy >= 1.18.1
-- pytorch >= 1.4.0
-- torchvision > 0.5.0
-- tensorboard >= 2.2.0
-- pytorch-lightning >= 0.7.1
+- tqdm = 4.44.1
+- numpy = 1.18.1
+- pytorch = 1.4.0
+- torchvision = 0.5.0
+- tensorboard = 2.2.0
+- pytorch-lightning = 0.7.1
