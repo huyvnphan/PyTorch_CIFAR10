@@ -23,7 +23,7 @@
 
 ## How to use pretrained models
 
-Download the weights from Box
+Download the weights from Box (2.39 GB)
 ```python
 python cifar10_download.py
 ```
