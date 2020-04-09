@@ -1,0 +1,11 @@
+key,value
+classifier,inception_v3
+data_dir,/raid/data/pytorch_dataset/cifar10/
+gpu,3
+batch_size,256
+max_epochs,100
+learning_rate,0.01
+weight_decay,0.01
+reduce_lr_per,30
+optimizer,SGD
+pretrained,False

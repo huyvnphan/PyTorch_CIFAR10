@@ -35,7 +35,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch_size', type=int, default=256)
     parser.add_argument('--max_epochs', type=int, default=100)
     parser.add_argument('--learning_rate', type=float, default=1e-2)
-    parser.add_argument('--weight_decay', type=float, default=2e-2)
+    parser.add_argument('--weight_decay', type=float, default=1e-2)
     parser.add_argument('--reduce_lr_per', type=int, default=30)
     parser.add_argument('--optimizer', type=str, default='SGD', choices=['SGD', 'AdamW'])
     parser.add_argument('--pretrained', type=bool, default=False)
