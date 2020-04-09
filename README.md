@@ -40,22 +40,20 @@ my_model = vgg11_bn(pretrained=True)
 ```
 
 If you use your own images, all models expect data to be in range (0, 1) then normalize by
-
-`mean = [0.4914, 0.4822, 0.4465]`
-
-`std = [0.2023, 0.1994, 0.2010])]`
+```python
+mean = [0.4914, 0.4822, 0.4465]
+std = [0.2023, 0.1994, 0.2010]]
+```
 
 ## How to train models from scratch
-Check the `cifar10_trainpy` to see all available hyper-parameter choices.
+Check the `cifar10_train.py` to see all available hyper-parameter choices.
 To reproduce the same accuracy use the default hyper-parameters
-```python
-python cifar10_train.py --classifier vgg11_bn --gpu 0
-```
+
+`python cifar10_train.py --classifier vgg11_bn --gpu 0`
 
 ## How to test trained models
-```python
-python cifar10_test.py --classifier vgg11_bn --gpu 0
-```
+`python cifar10_test.py --classifier vgg11_bn --gpu 0`
+
 Output
 
 `TEST RESULTS
