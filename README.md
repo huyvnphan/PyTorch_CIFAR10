@@ -39,10 +39,10 @@ my_model = vgg11_bn()
 my_model = vgg11_bn(pretrained=True)
 ```
 
-If you use your own images, all models expect data to be in range (0, 1) then normalize by
+If you use your own images, all models expect data to be in range [0, 1] then normalize by
 ```python
 mean = [0.4914, 0.4822, 0.4465]
-std = [0.2023, 0.1994, 0.2010]]
+std = [0.2023, 0.1994, 0.2010]
 ```
 
 ## How to train models from scratch
