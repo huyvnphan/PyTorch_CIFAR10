@@ -6,7 +6,7 @@
 
 ## Statistics of supported models
 | No. |     Model    | Val. Acc. | No. Params |   Size |
-|:---:|:------------:|:---------:|-----------:|-------:|
+|:---:|:-------------|----------:|-----------:|-------:|
 | 1   | vgg11_bn     |   91.93%  |  128.813 M | 491 MB |
 | 2   | vgg13_bn     |   93.79%  |  128.998 M | 492 MB |
 | 3   | vgg16_bn     |   93.57%  |  134.310 M | 512 MB |
@@ -23,12 +23,13 @@
 
 ## How to use pretrained models
 
-Download the weights from Box (2.39 GB)
+**Automatically download and extract the weights from Box (2.39 GB)**
 ```python
 python cifar10_download.py
 ```
+Or use [Google Drive](https://drive.google.com/file/d/1Gus7P_d1_92tUeXKMPtMctg_dizvNCU4/view?usp=sharing) backup link (you have to download and extract manually)
 
-Load model and run
+**Load model and run**
 ```python
 from cifar10_models import *
 
