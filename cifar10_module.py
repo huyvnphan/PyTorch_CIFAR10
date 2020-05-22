@@ -36,13 +36,14 @@ def get_classifier(classifier, pretrained):
         raise NameError('Please enter a valid classifier')
         
 class CIFAR10_Module(pl.LightningModule):
-    def __init__(self, hparams):
+    def __init__(self, hparams, pretrained=False):
         super().__init__()
         self.hparams = hparams
         self.criterion = torch.nn.CrossEntropyLoss()
         self.mean = [0.4914, 0.4822, 0.4465]
         self.std = [0.2023, 0.1994, 0.2010]
-        self.model = get_classifier(hparams.classifier, hparams.pretrained)
+        self.model = get_classifier(hparams.classifier, pretrained)
+        self.train_size = len(self.train_dataloader().dataset)
         self.val_size = len(self.val_dataloader().dataset)
         
     def forward(self, batch):
@@ -79,12 +80,13 @@ class CIFAR10_Module(pl.LightningModule):
         return {'progress_bar': {'Accuracy': accuracy}}
         
     def configure_optimizers(self):
-        if self.hparams.optimizer == 'AdamW':
-            optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.hparams.learning_rate, weight_decay=self.hparams.weight_decay)
-        elif self.hparams.optimizer == 'SGD':
-            optimizer = torch.optim.SGD(self.model.parameters(), lr=self.hparams.learning_rate, 
-                                        weight_decay=self.hparams.weight_decay, momentum=0.9, nesterov=True)
-        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=self.hparams.reduce_lr_per, gamma=0.1)
+        optimizer = torch.optim.SGD(self.parameters(), lr=self.hparams.learning_rate,
+                                    weight_decay=self.hparams.weight_decay, momentum=0.9, nesterov=True)
+            
+        scheduler = {'scheduler': torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=self.hparams.learning_rate, 
+                                                                     steps_per_epoch=self.train_size//self.hparams.batch_size,
+                                                                     epochs=self.hparams.max_epochs),
+                     'interval': 'step', 'name': 'learning_rate'}
         return [optimizer], [scheduler]
     
     def train_dataloader(self):
@@ -100,7 +102,7 @@ class CIFAR10_Module(pl.LightningModule):
         transform_val = transforms.Compose([transforms.ToTensor(),
                                             transforms.Normalize(self.mean, self.std)])
         dataset = CIFAR10(root=self.hparams.data_dir, train=False, transform=transform_val)
-        dataloader = DataLoader(dataset, batch_size=self.hparams.batch_size, num_workers=4, shuffle=True, pin_memory=True)
+        dataloader = DataLoader(dataset, batch_size=self.hparams.batch_size, num_workers=4, pin_memory=True)
         return dataloader
     
     def test_dataloader(self):
