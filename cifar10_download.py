@@ -2,7 +2,7 @@ import requests, zipfile, os
 from tqdm import tqdm
 
 def main():
-    url = "https://rutgers.box.com/shared/static/hm73mc6t8ncy1z499fwukpn1xes9rswe.zip"
+    url = "https://rutgers.box.com/shared/static/y9wi8ic7bshe2nn63prj9vsea7wibd4x.zip"
 
     # Streaming, so we can iterate over the response.
     r = requests.get(url, stream=True)

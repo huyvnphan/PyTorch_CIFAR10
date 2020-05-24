@@ -7,19 +7,19 @@
 ## Statistics of supported models
 | No. |     Model    | Val. Acc. | No. Params |   Size |
 |:---:|:-------------|----------:|-----------:|-------:|
-| 1   | vgg11_bn     |   91.93%  |  128.813 M | 491 MB |
-| 2   | vgg13_bn     |   93.79%  |  128.998 M | 492 MB |
-| 3   | vgg16_bn     |   93.57%  |  134.310 M | 512 MB |
-| 4   | vgg19_bn     |   92.43%  |  139.622 M | 533 MB |
-| 5   | resnet18     |   92.59%  |   11.174 M |  43 MB |
-| 6   | resnet34     |   92.14%  |   21.282 M |  81 MB |
-| 7   | resnet50     |   92.12%  |   23.521 M |  90 MB |
-| 8   | densenet121  |   92.79%  |    6.956 M |  27 MB |
-| 9   | densenet161  |   92.75%  |   26.483 M | 102 MB |
-| 10  | densenet169  |   92.84%  |   12.493 M |  48 MB |
-| 11  | mobilenet_v2 |   92.99%  |    2.237 M |   9 MB |
-| 12  | googlenet    |   92.66%  |    5.491 M |  21 MB |
-| 13  | inception_v3 |   93.27%  |   21.640 M |  83 MB |
+| 1   | vgg11_bn     |   92.09%  |  128.813 M | 491 MB |
+| 2   | vgg13_bn     |   94.29%  |  128.998 M | 492 MB |
+| 3   | vgg16_bn     |   93.91%  |  134.310 M | 512 MB |
+| 4   | vgg19_bn     |   93.80%  |  139.622 M | 533 MB |
+| 5   | resnet18     |   93.33%  |   11.174 M |  43 MB |
+| 6   | resnet34     |   92.92%  |   21.282 M |  81 MB |
+| 7   | resnet50     |   93.86%  |   23.521 M |  90 MB |
+| 8   | densenet121  |   94.14%  |    6.956 M |  27 MB |
+| 9   | densenet161  |   94.24%  |   26.483 M | 102 MB |
+| 10  | densenet169  |   94.00%  |   12.493 M |  48 MB |
+| 11  | mobilenet_v2 |   94.17%  |    2.237 M |   9 MB |
+| 12  | googlenet    |   92.73%  |    5.491 M |  21 MB |
+| 13  | inception_v3 |   93.76%  |   21.640 M |  83 MB |
 
 ## How to use pretrained models
 
@@ -27,7 +27,7 @@
 ```python
 python cifar10_download.py
 ```
-Or use [Google Drive](https://drive.google.com/file/d/1Gus7P_d1_92tUeXKMPtMctg_dizvNCU4/view?usp=sharing) backup link (you have to download and extract manually)
+Or use [Google Drive](https://drive.google.com/file/d/11DDSbPqFXLzooIv6YPmXuKRIZJ24808g/view?usp=sharing) backup link (you have to download and extract manually)
 
 **Load model and run**
 ```python
@@ -50,15 +50,15 @@ std = [0.2023, 0.1994, 0.2010]
 Check the `cifar10_train.py` to see all available hyper-parameter choices.
 To reproduce the same accuracy use the default hyper-parameters
 
-`python cifar10_train.py --classifier vgg11_bn --gpu 0`
+`python cifar10_train.py --classifier resnet18 --gpu '0,'`
 
 ## How to test trained models
-`python cifar10_test.py --classifier vgg11_bn --gpu 0`
+`python cifar10_test.py --classifier resnet18 --gpu '0,'`
 
 Output
 
 `TEST RESULTS
-{'Accuracy': 91.93}`
+{'Accuracy': 93.33}`
 
 ## Check the TensorBoard logs
 To see the training progress, cd to the `tensorboard_logs` and run TensorBoard there

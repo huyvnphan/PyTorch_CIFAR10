@@ -1,0 +1,7 @@
+batch_size: 256
+classifier: vgg11_bn
+data_dir: /data/huy/cifar10/
+gpus: 1,
+learning_rate: 0.01
+max_epochs: 100
+weight_decay: 0.01

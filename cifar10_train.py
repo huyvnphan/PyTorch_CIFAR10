@@ -5,7 +5,6 @@ from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks import LearningRateLogger
 from pytorch_lightning.loggers import TensorBoardLogger
 from cifar10_module import CIFAR10_Module
-# from pytorch_lightning.loggers import WandbLogger
 
 def main(hparams):
     
@@ -23,7 +22,7 @@ def main(hparams):
     lr_logger = LearningRateLogger()
     logger = TensorBoardLogger("logs", name=hparams.classifier)
     trainer = Trainer(callbacks=[lr_logger], gpus=hparams.gpus, max_epochs=hparams.max_epochs,
-                      deterministic=True, early_stop_callback=False, logger=logger, fast_dev_run=True)
+                      deterministic=True, early_stop_callback=False, logger=logger)
     trainer.fit(classifier)
 
     # Load best checkpoint
@@ -41,7 +40,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('--classifier', type=str, default='resnet18')
     parser.add_argument('--data_dir', type=str, default='/data/huy/cifar10/')
-    parser.add_argument('--gpus', default='0,')
+    parser.add_argument('--gpus', default='0,') # use None to train on CPU
     parser.add_argument('--batch_size', type=int, default=256)
     parser.add_argument('--max_epochs', type=int, default=100)
     parser.add_argument('--learning_rate', type=float, default=1e-2)

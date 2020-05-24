@@ -1,0 +1,7 @@
+batch_size: 256
+classifier: densenet121
+data_dir: /data/huy/cifar10/
+gpus: 3,
+learning_rate: 0.01
+max_epochs: 100
+weight_decay: 0.01
