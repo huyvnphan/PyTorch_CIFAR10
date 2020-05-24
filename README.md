@@ -69,9 +69,10 @@ Then go to
 `http://localhost:YOUR_PORT_NUMBER`
 
 ## Requirements
-- tqdm = 4.44.1
-- numpy = 1.18.1
-- pytorch = 1.4.0
-- torchvision = 0.5.0
-- tensorboard = 2.2.0
-- pytorch-lightning = 0.7.1
+**Just to use pretrained models**
+- pytorch = 1.5.0
+
+**To train & test**
+- torchvision = 0.6.0
+- tensorboard = 2.2.1
+- pytorch-lightning = 0.7.6
