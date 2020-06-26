@@ -239,7 +239,7 @@ def resnet50(pretrained=False, progress=True, device='cpu', **kwargs):
                    **kwargs)
 
 
-def resnet101(pretrained=False, progress=True, **kwargs):
+def resnet101(pretrained=False, progress=True, device='cpu', **kwargs):
     """Constructs a ResNet-101 model.
 
     Args:
@@ -250,7 +250,7 @@ def resnet101(pretrained=False, progress=True, **kwargs):
                    **kwargs)
 
 
-def resnet152(pretrained=False, progress=True, **kwargs):
+def resnet152(pretrained=False, progress=True, device='cpu', **kwargs):
     """Constructs a ResNet-152 model.
 
     Args:
@@ -261,7 +261,7 @@ def resnet152(pretrained=False, progress=True, **kwargs):
                    **kwargs)
 
 
-def resnext50_32x4d(pretrained=False, progress=True, **kwargs):
+def resnext50_32x4d(pretrained=False, progress=True, device='cpu', **kwargs):
     """Constructs a ResNeXt-50 32x4d model.
 
     Args:
@@ -274,7 +274,7 @@ def resnext50_32x4d(pretrained=False, progress=True, **kwargs):
                    pretrained, progress, device, **kwargs)
 
 
-def resnext101_32x8d(pretrained=False, progress=True, **kwargs):
+def resnext101_32x8d(pretrained=False, progress=True, device='cpu', **kwargs):
     """Constructs a ResNeXt-101 32x8d model.
 
     Args:
