@@ -13,7 +13,7 @@ def main(args):
 
     seed_everything(0)
     os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
-    logger = WandbLogger(name=args.description, project="cifar10")
+    logger = WandbLogger(name=args.classifier, project="cifar10")
     checkpoint = ModelCheckpoint(monitor="acc/val", mode="max", save_last=False)
 
     trainer = Trainer(
@@ -45,7 +45,6 @@ if __name__ == "__main__":
     parser = ArgumentParser()
 
     # PROGRAM level args
-    parser.add_argument("--description", type=str, default="default")
     parser.add_argument("--data_dir", type=str, default="/data/huy/cifar10")
     parser.add_argument("--download_data", type=int, default=0, choices=[0, 1])
     parser.add_argument("--phase", type=str, default="train", choices=["train", "test"])
