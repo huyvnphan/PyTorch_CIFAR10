@@ -13,7 +13,7 @@ def main(args):
 
     seed_everything(0)
     os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
-    logger = WandbLogger(name=args.description, project="pytorch_cifar10")
+    logger = WandbLogger(name=args.description, project="cifar10")
     checkpoint = ModelCheckpoint(monitor="acc/val", mode="max", save_last=False)
 
     trainer = Trainer(
