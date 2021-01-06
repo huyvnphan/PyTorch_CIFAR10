@@ -11,7 +11,7 @@ from cifar10_module import CIFAR10Module
 
 def main(args):
 
-    seed_everything(1)
+    seed_everything(0)
     os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
     logger = WandbLogger(name=args.description, project="pytorch_cifar10")
     checkpoint = ModelCheckpoint(monitor="acc/val", mode="max", save_last=False)
@@ -53,10 +53,15 @@ if __name__ == "__main__":
 
     # TRAINER args
     parser.add_argument("--classifier", type=str, default="resnet18")
+
     parser.add_argument("--precision", type=int, default=16, choices=[16, 32])
     parser.add_argument("--batch_size", type=int, default=256)
     parser.add_argument("--max_epochs", type=int, default=100)
     parser.add_argument("--num_workers", type=int, default=8)
     parser.add_argument("--gpu_id", type=str, default="3")
+
+    parser.add_argument("--learning_rate", type=float, default=1e-2)
+    parser.add_argument("--weight_decay", type=float, default=1e-2)
+
     args = parser.parse_args()
     main(args)
