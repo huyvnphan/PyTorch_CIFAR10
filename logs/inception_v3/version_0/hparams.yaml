@@ -1,7 +1,0 @@
-batch_size: 256
-classifier: inception_v3
-data_dir: /data/huy/cifar10/
-gpus: 0,
-learning_rate: 0.01
-max_epochs: 100
-weight_decay: 0.01

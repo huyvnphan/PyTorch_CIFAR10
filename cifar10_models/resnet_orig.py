@@ -3,9 +3,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 import os
 
-#Credit to https://github.com/akamaster/pytorch_resnet_cifar10
+# Credit to https://github.com/akamaster/pytorch_resnet_cifar10
 
-__all__ = ['resnet_orig']
+__all__ = ["resnet_orig"]
+
 
 class LambdaLayer(nn.Module):
     def __init__(self, lambd):
@@ -15,28 +16,45 @@ class LambdaLayer(nn.Module):
     def forward(self, x):
         return self.lambd(x)
 
+
 class BasicBlock(nn.Module):
     expansion = 1
 
-    def __init__(self, in_planes, planes, stride=1, option='A'):
+    def __init__(self, in_planes, planes, stride=1, option="A"):
         super(BasicBlock, self).__init__()
-        self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=False)
+        self.conv1 = nn.Conv2d(
+            in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=False
+        )
         self.bn1 = nn.BatchNorm2d(planes)
-        self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=1, padding=1, bias=False)
+        self.conv2 = nn.Conv2d(
+            planes, planes, kernel_size=3, stride=1, padding=1, bias=False
+        )
         self.bn2 = nn.BatchNorm2d(planes)
 
         self.shortcut = nn.Sequential()
         if stride != 1 or in_planes != planes:
-            if option == 'A':
+            if option == "A":
                 """
                 For CIFAR10 ResNet paper uses option A.
                 """
-                self.shortcut = LambdaLayer(lambda x:
-                                            F.pad(x[:, :, ::2, ::2], (0, 0, 0, 0, planes//4, planes//4), "constant", 0))
-            elif option == 'B':
+                self.shortcut = LambdaLayer(
+                    lambda x: F.pad(
+                        x[:, :, ::2, ::2],
+                        (0, 0, 0, 0, planes // 4, planes // 4),
+                        "constant",
+                        0,
+                    )
+                )
+            elif option == "B":
                 self.shortcut = nn.Sequential(
-                     nn.Conv2d(in_planes, self.expansion * planes, kernel_size=1, stride=stride, bias=False),
-                     nn.BatchNorm2d(self.expansion * planes)
+                    nn.Conv2d(
+                        in_planes,
+                        self.expansion * planes,
+                        kernel_size=1,
+                        stride=stride,
+                        bias=False,
+                    ),
+                    nn.BatchNorm2d(self.expansion * planes),
                 )
 
     def forward(self, x):
@@ -45,6 +63,7 @@ class BasicBlock(nn.Module):
         out += self.shortcut(x)
         out = F.relu(out)
         return out
+
 
 class ResNet(nn.Module):
     def __init__(self, block, num_blocks, num_classes=10):
@@ -59,7 +78,7 @@ class ResNet(nn.Module):
         self.linear = nn.Linear(64, num_classes)
 
     def _make_layer(self, block, planes, num_blocks, stride):
-        strides = [stride] + [1]*(num_blocks-1)
+        strides = [stride] + [1] * (num_blocks - 1)
         layers = []
         for stride in strides:
             layers.append(block(self.in_planes, planes, stride))
@@ -77,10 +96,13 @@ class ResNet(nn.Module):
         out = self.linear(out)
         return out
 
-def resnet_orig(pretrained=True, device='cpu'):
+
+def resnet_orig(pretrained=True, device="cpu"):
     net = ResNet(BasicBlock, [3, 3, 3])
     if pretrained:
         script_dir = os.path.dirname(__file__)
-        state_dict = torch.load(script_dir + '/state_dicts/resnet_orig.pt', map_location=device)
+        state_dict = torch.load(
+            script_dir + "/state_dicts/resnet_orig.pt", map_location=device
+        )
         net.load_state_dict(state_dict)
     return net
