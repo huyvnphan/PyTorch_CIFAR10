@@ -16,7 +16,7 @@ class CIFAR10Data(pl.LightningDataModule):
         self.mean = (0.4914, 0.4822, 0.4465)
         self.std = (0.2471, 0.2435, 0.2616)
 
-    def download():
+    def download_weights():
         url = (
             "https://rutgers.box.com/shared/static/y9wi8ic7bshe2nn63prj9vsea7wibd4x.zip"
         )

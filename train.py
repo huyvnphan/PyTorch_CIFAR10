@@ -11,34 +11,34 @@ from module import CIFAR10Module
 
 def main(args):
 
-    seed_everything(0)
-    os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
-    logger = WandbLogger(name=args.classifier, project="cifar10")
-    checkpoint = ModelCheckpoint(monitor="acc/val", mode="max", save_last=False)
-
-    trainer = Trainer(
-        fast_dev_run=bool(args.dev),
-        logger=logger if not bool(args.dev) else None,
-        gpus=-1,
-        deterministic=True,
-        weights_summary=None,
-        log_every_n_steps=1,
-        max_epochs=args.max_epochs,
-        checkpoint_callback=checkpoint,
-        precision=args.precision,
-    )
-
-    if bool(args.download_data):
-        CIFAR10Data.download()
-
-    model = CIFAR10Module(args)
-    data = CIFAR10Data(args)
-
-    if args.phase == "train":
-        trainer.fit(model, data)
-        trainer.test()
+    if bool(args.download_weights):
+        CIFAR10Data.download_weights()
     else:
-        trainer.test(model, data.test_dataloader())
+        seed_everything(0)
+        os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
+        logger = WandbLogger(name=args.classifier, project="cifar10")
+        checkpoint = ModelCheckpoint(monitor="acc/val", mode="max", save_last=False)
+
+        trainer = Trainer(
+            fast_dev_run=bool(args.dev),
+            logger=logger if not bool(args.dev) else None,
+            gpus=-1,
+            deterministic=True,
+            weights_summary=None,
+            log_every_n_steps=1,
+            max_epochs=args.max_epochs,
+            checkpoint_callback=checkpoint,
+            precision=args.precision,
+        )
+
+        model = CIFAR10Module(args)
+        data = CIFAR10Data(args)
+
+        if args.phase == "train":
+            trainer.fit(model, data)
+            trainer.test()
+        else:
+            trainer.test(model, data.test_dataloader())
 
 
 if __name__ == "__main__":
@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
     # PROGRAM level args
     parser.add_argument("--data_dir", type=str, default="/data/huy/cifar10")
-    parser.add_argument("--download_data", type=int, default=0, choices=[0, 1])
+    parser.add_argument("--download_weights", type=int, default=0, choices=[0, 1])
     parser.add_argument("--phase", type=str, default="train", choices=["train", "test"])
     parser.add_argument("--dev", type=int, default=0, choices=[0, 1])
 
