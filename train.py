@@ -1,6 +1,7 @@
 import os
 from argparse import ArgumentParser
 
+import torch
 from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
@@ -21,7 +22,7 @@ def main(args):
 
         trainer = Trainer(
             fast_dev_run=bool(args.dev),
-            logger=logger if not bool(args.dev) else None,
+            logger=logger if not bool(args.dev + args.test_phase) else None,
             gpus=-1,
             deterministic=True,
             weights_summary=None,
@@ -34,11 +35,17 @@ def main(args):
         model = CIFAR10Module(args)
         data = CIFAR10Data(args)
 
-        if args.phase == "train":
+        if bool(args.pretrained):
+            state_dict = os.path.join(
+                "cifar10_models", "state_dicts", args.classifier + ".pt"
+            )
+            model.model.load_state_dict(torch.load(state_dict))
+
+        if bool(args.test_phase):
+            trainer.test(model, data.test_dataloader())
+        else:
             trainer.fit(model, data)
             trainer.test()
-        else:
-            trainer.test(model, data.test_dataloader())
 
 
 if __name__ == "__main__":
@@ -47,11 +54,12 @@ if __name__ == "__main__":
     # PROGRAM level args
     parser.add_argument("--data_dir", type=str, default="/data/huy/cifar10")
     parser.add_argument("--download_weights", type=int, default=0, choices=[0, 1])
-    parser.add_argument("--phase", type=str, default="train", choices=["train", "test"])
+    parser.add_argument("--test_phase", type=int, default=0, choices=[0, 1])
     parser.add_argument("--dev", type=int, default=0, choices=[0, 1])
 
     # TRAINER args
     parser.add_argument("--classifier", type=str, default="resnet18")
+    parser.add_argument("--pretrained", type=int, default=0, choices=[0, 1])
 
     parser.add_argument("--precision", type=int, default=32, choices=[16, 32])
     parser.add_argument("--batch_size", type=int, default=256)

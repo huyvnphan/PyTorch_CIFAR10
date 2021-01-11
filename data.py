@@ -18,7 +18,7 @@ class CIFAR10Data(pl.LightningDataModule):
 
     def download_weights():
         url = (
-            "https://rutgers.box.com/shared/static/y9wi8ic7bshe2nn63prj9vsea7wibd4x.zip"
+            "https://rutgers.box.com/shared/static/gkw08ecs797j2et1ksmbg1w5t3idf5r5.zip"
         )
 
         # Streaming, so we can iterate over the response.
