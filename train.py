@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 import torch
 from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint
-from pytorch_lightning.loggers import WandbLogger
+from pytorch_lightning.loggers import WandbLogger, TensorBoardLogger
 
 from data import CIFAR10Data
 from module import CIFAR10Module
@@ -17,7 +17,12 @@ def main(args):
     else:
         seed_everything(0)
         os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
-        logger = WandbLogger(name=args.classifier, project="cifar10")
+
+        if args.logger == "wandb":
+            logger = WandbLogger(name=args.classifier, project="cifar10")
+        elif args.logger == "tensorboard":
+            logger = TensorBoardLogger("cifar10", name=args.classifier)
+
         checkpoint = ModelCheckpoint(monitor="acc/val", mode="max", save_last=False)
 
         trainer = Trainer(
@@ -56,6 +61,9 @@ if __name__ == "__main__":
     parser.add_argument("--download_weights", type=int, default=0, choices=[0, 1])
     parser.add_argument("--test_phase", type=int, default=0, choices=[0, 1])
     parser.add_argument("--dev", type=int, default=0, choices=[0, 1])
+    parser.add_argument(
+        "--logger", type=str, default="tensorboard", choices=["tensorboard", "wandb"]
+    )
 
     # TRAINER args
     parser.add_argument("--classifier", type=str, default="resnet18")

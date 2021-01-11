@@ -21,6 +21,9 @@
 | 12  | googlenet    |   92.85%  |    5.491 M |  22 MB |
 | 13  | inception_v3 |   93.74%  |   21.640 M |  83 MB |
 
+## Details report
+Weight and Biases' details report for this project [WandB Report] https://wandb.ai/huyvnphan/cifar10/reports/CIFAR10-Classification-using-PyTorch---VmlldzozOTg0ODQ?accessToken=9m2q1ajhppuziprsq9tlryynvmqbkrbvjdoktrz7o6gtqilmtqbv2r9jjrtb2tqq
+
 ## How to use pretrained models
 
 **Automatically download and extract the weights from Box (933 MB)**
@@ -52,23 +55,20 @@ To reproduce the same accuracy use the default hyper-parameters
 
 `python train.py --classifier resnet18`
 
-## How to test trained models
-`python train.py --classifier resnet18`
+## How to test pretrained models
+`python train.py --test_phase 1 --pretrained 1 --classifier resnet18
 
 Output
 
 `{'acc/test': tensor(93.0689, device='cuda:0')}`
 
-## Check the TensorBoard logs
-To see the training progress, cd to the `tensorboard_logs` and run TensorBoard there
-
-`tensorboard --logdir=. --port=YOUR_PORT_NUMBER`
 
 ## Requirements
 **Just to use pretrained models**
 - pytorch = 1.7.0
 
 **To train & test**
-- torchvision = 0.6.0
+- pytorch = 1.7.0
+- torchvision = 0.7.0
 - tensorboard = 2.2.1
-- pytorch-lightning = 0.7.6
+- pytorch-lightning = 1.1.0
