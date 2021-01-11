@@ -24,6 +24,9 @@
 ## Details report
 Weight and Biases' details report for this project [WandB Report](https://wandb.ai/huyvnphan/cifar10/reports/CIFAR10-Classification-using-PyTorch---VmlldzozOTg0ODQ?accessToken=9m2q1ajhppuziprsq9tlryynvmqbkrbvjdoktrz7o6gtqilmtqbv2r9jjrtb2tqq)
 
+## How To Cite
+[![DOI](https://zenodo.org/badge/195914773.svg)](https://zenodo.org/badge/latestdoi/195914773)
+
 ## How to use pretrained models
 
 **Automatically download and extract the weights from Box (933 MB)**
