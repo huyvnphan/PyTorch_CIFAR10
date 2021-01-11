@@ -272,7 +272,6 @@ def _resnet(arch, block, layers, pretrained, progress, device, **kwargs):
 
 def resnet18(pretrained=False, progress=True, device="cpu", **kwargs):
     """Constructs a ResNet-18 model.
-
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
@@ -284,7 +283,6 @@ def resnet18(pretrained=False, progress=True, device="cpu", **kwargs):
 
 def resnet34(pretrained=False, progress=True, device="cpu", **kwargs):
     """Constructs a ResNet-34 model.
-
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
@@ -296,7 +294,6 @@ def resnet34(pretrained=False, progress=True, device="cpu", **kwargs):
 
 def resnet50(pretrained=False, progress=True, device="cpu", **kwargs):
     """Constructs a ResNet-50 model.
-
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
