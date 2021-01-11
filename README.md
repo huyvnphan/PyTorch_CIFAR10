@@ -41,6 +41,7 @@ my_model = vgg11_bn()
 
 # Pretrained model
 my_model = vgg11_bn(pretrained=True)
+my_model.eval() # for evaluation
 ```
 
 If you use your own images, all models expect data to be in range [0, 1] then normalized by
