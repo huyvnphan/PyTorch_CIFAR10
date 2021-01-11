@@ -22,7 +22,7 @@
 | 13  | inception_v3 |   93.74%  |   21.640 M |  83 MB |
 
 ## Details report
-Weight and Biases' details report for this project [WandB Report] https://wandb.ai/huyvnphan/cifar10/reports/CIFAR10-Classification-using-PyTorch---VmlldzozOTg0ODQ?accessToken=9m2q1ajhppuziprsq9tlryynvmqbkrbvjdoktrz7o6gtqilmtqbv2r9jjrtb2tqq
+Weight and Biases' details report for this project [WandB Report](https://wandb.ai/huyvnphan/cifar10/reports/CIFAR10-Classification-using-PyTorch---VmlldzozOTg0ODQ?accessToken=9m2q1ajhppuziprsq9tlryynvmqbkrbvjdoktrz7o6gtqilmtqbv2r9jjrtb2tqq)
 
 ## How to use pretrained models
 
@@ -56,7 +56,7 @@ To reproduce the same accuracy use the default hyper-parameters
 `python train.py --classifier resnet18`
 
 ## How to test pretrained models
-`python train.py --test_phase 1 --pretrained 1 --classifier resnet18
+`python train.py --test_phase 1 --pretrained 1 --classifier resnet18`
 
 Output
 
