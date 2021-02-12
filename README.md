@@ -50,7 +50,7 @@ my_model.eval() # for evaluation
 If you use your own images, all models expect data to be in range [0, 1] then normalized by
 ```python
 mean = [0.4914, 0.4822, 0.4465]
-std = [0.2023, 0.1994, 0.2010]
+std = [0.2471, 0.2435, 0.2616]
 ```
 
 ## How to train models from scratch
