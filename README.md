@@ -21,8 +21,10 @@
 | 12  | googlenet    |   92.85%  |    5.491 M |  22 MB |
 | 13  | inception_v3 |   93.74%  |   21.640 M |  83 MB |
 
-## Details report
+## Details Report & Run Logs
 Weight and Biases' details report for this project [WandB Report](https://wandb.ai/huyvnphan/cifar10/reports/CIFAR10-Classification-using-PyTorch---VmlldzozOTg0ODQ?accessToken=9m2q1ajhppuziprsq9tlryynvmqbkrbvjdoktrz7o6gtqilmtqbv2r9jjrtb2tqq)
+
+Weight and Biases' run logs for this project [WandB Run Log](https://wandb.ai/huyvnphan/cifar10). You can see each run hyper-parameters, training accuracy, validation accuracy, loss, time taken.
 
 ## How To Cite
 [![DOI](https://zenodo.org/badge/195914773.svg)](https://zenodo.org/badge/latestdoi/195914773)
