@@ -39,7 +39,12 @@ def main(args):
     os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
 
     if args.logger == "wandb":
-        logger = WandbLogger(name=args.classifier, project="cifar10")
+        logger = WandbLogger(
+            name=args.description,
+            project="PyTorch_CIFAR10",
+            log_model=False,
+            save_dir="logs",
+        )
     elif args.logger == "tensorboard":
         logger = TensorBoardLogger("cifar10", name=args.classifier)
 
