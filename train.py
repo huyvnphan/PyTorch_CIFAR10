@@ -107,9 +107,9 @@ if __name__ == "__main__":
     # HYPER-PARAMS args
     parser.add_argument("--classifier", type=str, default="resnet18")
     parser.add_argument("--pretrained", type=int, default=0, choices=[0, 1])
-    parser.add_argument("--batch_size", type=int, default=256)
+    parser.add_argument("--batch_size", type=int, default=128)
     parser.add_argument("--max_epochs", type=int, default=100)
-    parser.add_argument("--learning_rate", type=float, default=0.02)
+    parser.add_argument("--learning_rate", type=float, default=0.01)
     parser.add_argument("--weight_decay", type=float, default=5e-3)
 
     args = parser.parse_args()
