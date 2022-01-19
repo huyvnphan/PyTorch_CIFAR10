@@ -18,7 +18,7 @@ class CIFAR10Data(pl.LightningDataModule):
         transform = T.Compose(
             [
                 T.Resize(32),
-                # T.RandomCrop(32, padding=4),
+                T.RandomCrop(32, padding=4),
                 # T.RandomRotation(10),
                 T.RandomHorizontalFlip(),
                 T.ToTensor(),
@@ -39,6 +39,8 @@ class CIFAR10Data(pl.LightningDataModule):
     def val_dataloader(self):
         transform = T.Compose(
             [
+                T.Resize(32),
+                T.CenterCrop(32, padding=4),
                 T.ToTensor(),
                 T.Normalize(self.mean, self.std),
             ]
