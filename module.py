@@ -49,7 +49,7 @@ class CIFAR10Module(pl.LightningModule):
             nesterov=True,
         )
         milestones = [
-            int(0.25 * self.hparams.max_epochs),
+            # int(0.25 * self.hparams.max_epochs),
             int(0.50 * self.hparams.max_epochs),
             int(0.75 * self.hparams.max_epochs),
         ]
