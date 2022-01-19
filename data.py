@@ -40,7 +40,7 @@ class CIFAR10Data(pl.LightningDataModule):
         transform = T.Compose(
             [
                 T.Resize(32),
-                T.CenterCrop(32, padding=4),
+                T.CenterCrop(32),
                 T.ToTensor(),
                 T.Normalize(self.mean, self.std),
             ]
