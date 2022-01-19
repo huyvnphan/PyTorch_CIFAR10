@@ -3,7 +3,7 @@ import pytorch_lightning as pl
 import torch
 import torch.nn as nn
 
-from torch.optim.lr_scheduler import CosineAnnealingLR
+from torch.optim.lr_scheduler import MultiStepLR
 from accuracy import Accuracy
 
 
@@ -41,7 +41,6 @@ class CIFAR10Module(pl.LightningModule):
         self.log("accuracy/test", accuracy)
 
     def configure_optimizers(self):
-        total_steps = self.hparams.max_epochs * len(self.train_dataloader())
         optimizer = torch.optim.SGD(
             self.model.parameters(),
             lr=self.hparams.learning_rate,
@@ -49,11 +48,13 @@ class CIFAR10Module(pl.LightningModule):
             momentum=0.9,
             nesterov=True,
         )
+        milestones = [
+            int(0.25 * self.hparams.max_epochs),
+            int(0.50 * self.hparams.max_epochs),
+            int(0.75 * self.hparams.max_epochs),
+        ]
         scheduler = {
-            "scheduler": CosineAnnealingLR(
-                optimizer,
-                T_max=total_steps,
-            ),
-            "interval": "step",
+            "scheduler": MultiStepLR(optimizer, milestones=milestones, gamma=0.1),
+            "interval": "epoch",
         }
         return [optimizer], [scheduler]
