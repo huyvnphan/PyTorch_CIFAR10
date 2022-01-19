@@ -17,7 +17,8 @@ class CIFAR10Data(pl.LightningDataModule):
     def train_dataloader(self):
         transform = T.Compose(
             [
-                T.RandomCrop(32, padding=4),
+                T.Resize(32),
+                # T.RandomCrop(32, padding=4),
                 # T.RandomRotation(10),
                 T.RandomHorizontalFlip(),
                 T.ToTensor(),
