@@ -5,7 +5,9 @@ import torch
 from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger, TensorBoardLogger
-
+from torchvision.datasets import CIFAR10
+import sys
+sys.path.append('/content/PyTorch_CIFAR10/data.py')
 from data import CIFAR10Data
 from module import CIFAR10Module
 
@@ -16,24 +18,21 @@ def main(args):
         CIFAR10Data.download_weights()
     else:
         seed_everything(0)
-        os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
 
         if args.logger == "wandb":
             logger = WandbLogger(name=args.classifier, project="cifar10")
         elif args.logger == "tensorboard":
             logger = TensorBoardLogger("cifar10", name=args.classifier)
 
-        checkpoint = ModelCheckpoint(monitor="acc/val", mode="max", save_last=False)
+        checkpoint_callback = ModelCheckpoint(monitor="acc/val", mode="max", save_last=False)
 
         trainer = Trainer(
             fast_dev_run=bool(args.dev),
             logger=logger if not bool(args.dev + args.test_phase) else None,
-            gpus=-1,
+            accelerator="gpu",
             deterministic=True,
-            weights_summary=None,
             log_every_n_steps=1,
             max_epochs=args.max_epochs,
-            checkpoint_callback=checkpoint,
             precision=args.precision,
         )
 
@@ -51,6 +50,14 @@ def main(args):
         else:
             trainer.fit(model, data)
             trainer.test()
+
+        # Manually save the best checkpoint
+        if trainer.global_rank == 0:
+            best_checkpoint_path = checkpoint_callback.best_model_path
+            if best_checkpoint_path is not None:
+                best_checkpoint_dir = os.path.dirname(best_checkpoint_path)
+                os.makedirs(best_checkpoint_dir, exist_ok=True)
+                torch.save(model.state_dict(), os.path.join(best_checkpoint_dir, "best_model.pt"))
 
 
 if __name__ == "__main__":
@@ -72,11 +79,14 @@ if __name__ == "__main__":
     parser.add_argument("--precision", type=int, default=32, choices=[16, 32])
     parser.add_argument("--batch_size", type=int, default=256)
     parser.add_argument("--max_epochs", type=int, default=100)
-    parser.add_argument("--num_workers", type=int, default=8)
-    parser.add_argument("--gpu_id", type=str, default="3")
+    parser.add_argument("--num_workers", type=int, default=4)
 
-    parser.add_argument("--learning_rate", type=float, default=1e-2)
-    parser.add_argument("--weight_decay", type=float, default=1e-2)
+    # CIFAR10Module args
+    parser.add_argument("--lr", type=float, default=0.01)
+    parser.add_argument("--momentum", type=float, default=0.9)
+    parser.add_argument("--weight_decay", type=float, default=1e-4)
+    parser.add_argument("--scheduler_step_size", type=int, default=50)
+    parser.add_argument("--scheduler_gamma", type=float, default=0.1)
 
     args = parser.parse_args()
     main(args)
