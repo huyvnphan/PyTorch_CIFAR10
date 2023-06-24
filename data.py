@@ -7,14 +7,31 @@ from torch.utils.data import DataLoader
 from torchvision import transforms as T
 from torchvision.datasets import CIFAR10
 from tqdm import tqdm
+from torchvision import transforms
 
 
 class CIFAR10Data(pl.LightningDataModule):
     def __init__(self, args):
         super().__init__()
-        self.hparams = args
+        self.args = args
+        self.data_dir = args.data_dir
         self.mean = (0.4914, 0.4822, 0.4465)
         self.std = (0.2471, 0.2435, 0.2616)
+
+    def _get_transform(self, train):
+        if train:
+            transform = transforms.Compose([
+                transforms.RandomCrop(32, padding=4),
+                transforms.RandomHorizontalFlip(),
+                transforms.ToTensor(),
+                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+            ])
+        else:
+            transform = transforms.Compose([
+                transforms.ToTensor(),
+                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+            ])
+        return transform
 
     def download_weights():
         url = (
@@ -46,41 +63,17 @@ class CIFAR10Data(pl.LightningDataModule):
             print("Unzip file successful!")
 
     def train_dataloader(self):
-        transform = T.Compose(
-            [
-                T.RandomCrop(32, padding=4),
-                T.RandomHorizontalFlip(),
-                T.ToTensor(),
-                T.Normalize(self.mean, self.std),
-            ]
-        )
-        dataset = CIFAR10(root=self.hparams.data_dir, train=True, transform=transform)
-        dataloader = DataLoader(
-            dataset,
-            batch_size=self.hparams.batch_size,
-            num_workers=self.hparams.num_workers,
-            shuffle=True,
-            drop_last=True,
-            pin_memory=True,
-        )
+        transform = self._get_transform(train=True)
+        dataset = CIFAR10(root=self.data_dir, train=True, transform=transform, download=True)
+        dataloader = DataLoader(dataset, batch_size=self.args.batch_size, shuffle=True, num_workers=self.args.num_workers)
         return dataloader
 
     def val_dataloader(self):
-        transform = T.Compose(
-            [
-                T.ToTensor(),
-                T.Normalize(self.mean, self.std),
-            ]
-        )
-        dataset = CIFAR10(root=self.hparams.data_dir, train=False, transform=transform)
-        dataloader = DataLoader(
-            dataset,
-            batch_size=self.hparams.batch_size,
-            num_workers=self.hparams.num_workers,
-            drop_last=True,
-            pin_memory=True,
-        )
+        transform = self._get_transform(train=False)
+        dataset = CIFAR10(root=self.data_dir, train=False, transform=transform, download=True)
+        dataloader = DataLoader(dataset, batch_size=self.args.batch_size, shuffle=False, num_workers=self.args.num_workers)
         return dataloader
+
 
     def test_dataloader(self):
         return self.val_dataloader()
