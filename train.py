@@ -11,7 +11,7 @@ import sys
 sys.path.append('/content/PyTorch_CIFAR10/data.py')
 from data import CIFAR10Data
 from module import CIFAR10Module
-
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 def main(args):
 
@@ -47,10 +47,10 @@ def main(args):
             model.model.load_state_dict(torch.load(state_dict))
 
         if bool(args.test_phase):
-            trainer.test(model, data.test_dataloader())
+            trainer.test(model, dataloaders=data.test_dataloader())
         else:
-            trainer.fit(model, data)
-            trainer.test()
+            trainer.fit(model, datamodule=data)
+            trainer.test(dataloaders=data.test_dataloader())
 
         # Manually save the best checkpoint
         if trainer.global_rank == 0:
