@@ -12,6 +12,7 @@ sys.path.append('/content/PyTorch_CIFAR10/data.py')
 from data import CIFAR10Data
 from module import CIFAR10Module
 
+
 def main(args):
 
     if bool(args.download_weights):
@@ -55,9 +56,11 @@ def main(args):
         if trainer.global_rank == 0:
             best_checkpoint_path = checkpoint_callback.best_model_path
             if best_checkpoint_path is not None:
-                best_checkpoint_dir = os.path.dirname(best_checkpoint_path)
+                best_checkpoint_dir = os.path.join(args.data_dir, args.classifier, "checkpoints")
                 os.makedirs(best_checkpoint_dir, exist_ok=True)
-                torch.save(model.state_dict(), os.path.join(best_checkpoint_dir, "best_model.pt"))
+                best_checkpoint_file = os.path.join(best_checkpoint_dir, "best_model.pt")
+                torch.save(model.state_dict(), best_checkpoint_file)
+                print(f"Saved best checkpoint: {best_checkpoint_file}")
 
 
 if __name__ == "__main__":
