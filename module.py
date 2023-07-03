@@ -1,6 +1,6 @@
 import pytorch_lightning as pl
 import torch
-from pytorch_lightning.metrics import Accuracy
+from torchmetrics import Accuracy
 
 from cifar10_models.densenet import densenet121, densenet161, densenet169
 from cifar10_models.googlenet import googlenet
@@ -9,6 +9,16 @@ from cifar10_models.mobilenetv2 import mobilenet_v2
 from cifar10_models.resnet import resnet18, resnet34, resnet50
 from cifar10_models.vgg import vgg11_bn, vgg13_bn, vgg16_bn, vgg19_bn
 from schduler import WarmupCosineLR
+
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torch.nn.functional as F
+from torch.optim.lr_scheduler import StepLR
+import pytorch_lightning as pl
+
+# from vgg import vgg11_bn, vgg13_bn, vgg16_bn, vgg19_bn
+from cifar10_models.vgg import vgg11_bn, vgg13_bn, vgg16_bn, vgg19_bn
 
 all_classifiers = {
     "vgg11_bn": vgg11_bn(),
@@ -26,53 +36,65 @@ all_classifiers = {
     "inception_v3": inception_v3(),
 }
 
-
 class CIFAR10Module(pl.LightningModule):
     def __init__(self, hparams):
         super().__init__()
-        self.hparams = hparams
+        
+        self.save_hyperparameters(hparams)
 
-        self.criterion = torch.nn.CrossEntropyLoss()
-        self.accuracy = Accuracy()
+        if hparams.classifier == "vgg11_bn":
+            self.model = vgg11_bn(pretrained=False, progress=True, device=self.device)
+        elif hparams.classifier == "vgg13_bn":
+            self.model = vgg13_bn(pretrained=False, progress=True, device=self.device)
+        elif hparams.classifier == "vgg16_bn":
+            self.model = vgg16_bn(pretrained=False, progress=True, device=self.device)
+        elif hparams.classifier == "vgg19_bn":
+            self.model = vgg19_bn(pretrained=False, progress=True, device=self.device)
+        else:
+            raise ValueError("Invalid classifier name.")
 
-        self.model = all_classifiers[self.hparams.classifier]
+        self.criterion = nn.CrossEntropyLoss()
 
-    def forward(self, batch):
-        images, labels = batch
-        predictions = self.model(images)
-        loss = self.criterion(predictions, labels)
-        accuracy = self.accuracy(predictions, labels)
-        return loss, accuracy * 100
-
-    def training_step(self, batch, batch_nb):
-        loss, accuracy = self.forward(batch)
-        self.log("loss/train", loss)
-        self.log("acc/train", accuracy)
-        return loss
-
-    def validation_step(self, batch, batch_nb):
-        loss, accuracy = self.forward(batch)
-        self.log("loss/val", loss)
-        self.log("acc/val", accuracy)
-
-    def test_step(self, batch, batch_nb):
-        loss, accuracy = self.forward(batch)
-        self.log("acc/test", accuracy)
+    def forward(self, x):
+        return self.model(x)
 
     def configure_optimizers(self):
-        optimizer = torch.optim.SGD(
-            self.model.parameters(),
-            lr=self.hparams.learning_rate,
+        optimizer = optim.SGD(
+            self.parameters(),
+            lr=self.hparams.lr,
+            momentum=self.hparams.momentum,
             weight_decay=self.hparams.weight_decay,
-            momentum=0.9,
-            nesterov=True,
         )
-        total_steps = self.hparams.max_epochs * len(self.train_dataloader())
-        scheduler = {
-            "scheduler": WarmupCosineLR(
-                optimizer, warmup_epochs=total_steps * 0.3, max_epochs=total_steps
-            ),
-            "interval": "step",
-            "name": "learning_rate",
-        }
+        scheduler = StepLR(
+            optimizer,
+            step_size=self.hparams.scheduler_step_size,
+            gamma=self.hparams.scheduler_gamma,
+        )
         return [optimizer], [scheduler]
+
+    def training_step(self, batch, batch_idx):
+        x, y = batch
+        output = self(x)
+        loss = self.criterion(output, y)
+        self.log("loss/train", loss, prog_bar=True)
+        return loss
+
+    def validation_step(self, batch, batch_idx):
+        x, y = batch
+        output = self(x)
+        loss = self.criterion(output, y)
+        pred = output.argmax(dim=1, keepdim=True)
+        correct = pred.eq(y.view_as(pred)).sum().item()
+        acc = correct / len(x)
+        self.log("loss/val", loss, prog_bar=True)
+        self.log("acc/val", acc, prog_bar=True)
+
+    def test_step(self, batch, batch_idx):
+        x, y = batch
+        output = self(x)
+        loss = self.criterion(output, y)
+        pred = output.argmax(dim=1, keepdim=True)
+        correct = pred.eq(y.view_as(pred)).sum().item()
+        acc = correct / len(x)
+        self.log("loss/test", loss, prog_bar=True)
+        self.log("acc/test", acc, prog_bar=True)
