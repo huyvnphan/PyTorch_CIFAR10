@@ -1,4 +1,5 @@
 cifar10/
+cifar10_models/state_dicts
 wandb/
 *.ckpt
 checkpoints/
